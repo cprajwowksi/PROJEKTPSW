@@ -1,55 +1,54 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Readex+Pro:wght@200;300;400;500;700&display=swap');
 
-body {
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(
-          45deg,
-          #8b4513,
-          #8b4513 10%,
-          #a0522d 10%,
-          #a0522d 20%,
-          #deb887 20%,
-          #deb887 30%,
-          #8b4513 30%,
-          #8b4513 40%,
-          #a0522d 40%,
-          #a0522d 50%,
-          #deb887 50%,
-          #deb887 60%,
-          #8b4513 60%,
-          #8b4513 70%,
-          #a0522d 70%,
-          #a0522d 80%,
-          #deb887 80%,
-          #deb887 90%,
-          #8b4513 90%,
-          #8b4513
-  );
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #fff; /* Set text color to white or a suitable contrast color */
-
+*{
+  background-color: black;
+  color:white;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* ------ NAV ------*/
+nav{
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1em;
+  margin-bottom: 3em;
+}
 
+nav .fb-logo {
+  width: 80px; /* Adjust this value to your desired width */
+  height: 50px; /* Adjust this value to your desired height */
+}
+nav .ig-logo {
+  width: 45px; /* Adjust this value to your desired width */
+  height: 45px; /* Adjust this value to your desired height */
+}
+nav .panda-logo {
+  width: 100px; /* Adjust this value to your desired width */
+  height: 120px; /* Adjust this value to your desired height */
+
+}
+
+nav button {
+  border: none;
+  font-size: 1em;
+  letter-spacing: 0.25em;
+}
+
+
+nav button:hover{
+  cursor: pointer;
+}
 
 /*------ MENU -----*/
 
-.menu {
+.menu{
   display:flex;
   width: 100%;
   align-items: center;
   justify-content: center;
-
 }
 .menu .card {
   display: flex;
@@ -60,18 +59,40 @@ code {
   height: 20em;
 }
 
+.menu-card h2{
+  font-size: 3em;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0.25em;
+  font-weight: lighter;
+  letter-spacing: 0.25em;
+}
 .menu .ramen-card{
-  background-image:url("./img/ramenv5.jpg") ;
+  background-image:url("./img/darkmode-ramen.jpg") ;
   background-size: cover;
   background-position:center;
 }
 
 .menu .sushi-card{
-  background-image:url("./img/sushiv7.png") ;
-  background-size: cover;
+  background-image:url("./img/sushiview.png") ;
+  background-size: 100%;
   background-position:center;
 }
 
+.menu .menu-button{
+  margin-bottom: 0em;
+  margin-top: 4em;
+  margin-right: 2.5em;
+  margin-left: 2.5em;
+  background-color: white;
+  border:none;
+  padding:0;
+  border-radius: 0.75em;
+}
+
+.menu .menu-button:hover{
+  cursor:pointer;
+}
 .menu .card p {
   font-size: 5em;
   color: white;
