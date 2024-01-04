@@ -1,13 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Readex+Pro:wght@200;300;400;500;700&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(
+          45deg,
+          #8b4513,
+          #8b4513 10%,
+          #a0522d 10%,
+          #a0522d 20%,
+          #deb887 20%,
+          #deb887 30%,
+          #8b4513 30%,
+          #8b4513 40%,
+          #a0522d 40%,
+          #a0522d 50%,
+          #deb887 50%,
+          #deb887 60%,
+          #8b4513 60%,
+          #8b4513 70%,
+          #a0522d 70%,
+          #a0522d 80%,
+          #deb887 80%,
+          #deb887 90%,
+          #8b4513 90%,
+          #8b4513
+  );
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff; /* Set text color to white or a suitable contrast color */
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+/*------ MENU -----*/
+
+.menu {
+  display:flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+.menu .card {
+  display: flex;
+  margin: 0.5em;
+  align-items:center;
+  justify-content:center;
+  width: 20em;
+  height: 20em;
+}
+
+.menu .ramen-card{
+  background-image:url("./img/ramenv5.jpg") ;
+  background-size: cover;
+  background-position:center;
+}
+
+.menu .sushi-card{
+  background-image:url("./img/sushiv7.png") ;
+  background-size: cover;
+  background-position:center;
+}
+
+.menu .card p {
+  font-size: 5em;
+  color: white;
+  text-transform: uppercase;
 }
