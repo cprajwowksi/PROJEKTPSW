@@ -13,7 +13,6 @@ function Menu() {
                     <div className="sushi-card card">
 
                     </div>
-
                 </button>
                 <h2>Sushi</h2>
             </div>

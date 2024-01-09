@@ -1,8 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Readex+Pro:wght@200;300;400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 *{
+  font-family: 'Oswald', sans-serif;
   background-color: black;
-  color:white;
+  color:#fefcec;
 }
 
 code {
@@ -15,26 +19,32 @@ nav{
   justify-content: space-around;
   margin-top: 1em;
   margin-bottom: 3em;
+  padding:1em;
 }
 
 nav .fb-logo {
-  width: 80px; /* Adjust this value to your desired width */
-  height: 50px; /* Adjust this value to your desired height */
+  width: 80px;
+  height: 50px;
 }
+
 nav .ig-logo {
-  width: 45px; /* Adjust this value to your desired width */
-  height: 45px; /* Adjust this value to your desired height */
+  width: 45px;
+  height: 45px;
 }
 nav .panda-logo {
-  width: 100px; /* Adjust this value to your desired width */
-  height: 120px; /* Adjust this value to your desired height */
+  width: 100px;
+  height: 120px;
 
 }
 
 nav button {
-  border: none;
-  font-size: 1em;
-  letter-spacing: 0.25em;
+  border:none;
+  height: 3em;
+  border-radius: 1em;
+  padding-right:2em;
+  padding-left:2em;
+  font-size: 1.25em;
+  letter-spacing: 0.1em;
 }
 
 
@@ -53,6 +63,7 @@ nav button:hover{
 .menu .card {
   display: flex;
   margin: 0.5em;
+  padding:5em;
   align-items:center;
   justify-content:center;
   width: 20em;
@@ -67,16 +78,18 @@ nav button:hover{
   font-weight: lighter;
   letter-spacing: 0.25em;
 }
+
 .menu .ramen-card{
   background-image:url("./img/darkmode-ramen.jpg") ;
-  background-size: cover;
+  background-size: 90%;
   background-position:center;
 }
 
 .menu .sushi-card{
   background-image:url("./img/sushiview.png") ;
-  background-size: 100%;
+  background-size: 90%;
   background-position:center;
+
 }
 
 .menu .menu-button{
@@ -84,7 +97,7 @@ nav button:hover{
   margin-top: 4em;
   margin-right: 2.5em;
   margin-left: 2.5em;
-  background-color: white;
+  background-color: #fefcec;
   border:none;
   padding:0;
   border-radius: 0.75em;
@@ -95,6 +108,8 @@ nav button:hover{
 }
 .menu .card p {
   font-size: 5em;
-  color: white;
+  color: #fefcec;
   text-transform: uppercase;
 }
+
+/*authmodal*/
