@@ -1,0 +1,28 @@
+.footer-footer {
+    font-size: 3em;
+    margin: 1em;
+    display: flex;
+    white-space: nowrap;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    color: white;
+}
+
+.marquee {
+    display: inline-flex;
+    animation: scrollbar 40s linear infinite;
+}
+
+.marquee-item {
+    flex-shrink: 0;
+}
+
+@keyframes scrollbar {
+    0% {
+        transform: translateX(25%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}

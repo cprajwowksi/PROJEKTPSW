@@ -11,7 +11,6 @@ function Menu() {
             <div className="menu-sushi menu-card">
                 <button className="sushi-button menu-button">
                     <div className="sushi-card card">
-
                     </div>
                 </button>
                 <h2>Sushi</h2>

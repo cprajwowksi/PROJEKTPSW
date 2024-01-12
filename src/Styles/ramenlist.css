@@ -1,0 +1,84 @@
+.ramen-list {
+    letter-spacing: 0.05em;
+    color:white;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ramen-list .list-header{
+    display: flex;
+    margin:0;
+}
+.ramen-list .ramenlist-item{
+    display: flex;
+    padding: 2em;
+    margin:1em;
+    border-radius: 0.25em;
+    max-width: 33%;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+
+}
+.ramen-list .ramenlist-item:hover{
+    transform: scale(1.05);
+
+}
+.ramen-list .list-header i,p{
+    padding: 0.25em;
+    margin:0;
+    align-self: center;
+
+}
+.ramen-list .fa-star{
+    color: #bebe3c;
+}
+.ramen-list .fa-pepper-hot {
+    color: #7c1a1a;
+}
+
+.ramen-list .fa-seedling {
+    align-self: center;
+    color: darkgreen;
+}
+.ramen-list .fa-fish-fins {
+    align-self: center;
+    color: #f39999;
+}
+
+.ramen-list h2{
+    font-size: 3em;
+    text-transform: uppercase;
+}
+.ramen-list h3{
+    font-size: 1.4em;
+    padding-left: 0.5em;
+    text-transform: uppercase;
+}
+.ramen-list .ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    margin:1em;
+}
+
+
+.ramen-list button {
+    border:none;
+    height: 3em;
+    border-radius: 1em;
+    margin:0.25em;
+    padding-right:2em;
+    padding-left:2em;
+    font-size: 1.25em;
+    letter-spacing: 0.1em;
+    transition: background-color 0.3s ease-in-out; /* Dodano płynne przejście */
+
+}
+
+.ramen-list button:hover{
+    cursor:pointer;
+    background-color: black;
+    border: 1px solid white;
+    color: white;
+}
+

@@ -8,7 +8,7 @@ function Nav({ setSignUpClicked }) {
         <nav>
             <button onClick={() => setSignUpClicked(true)}>ZALOGUJ</button>
             <button><img className="fb-logo" src={fblogo} alt="ig-logo"/></button>
-            <a><img className="ig-logo" src={iglogo} alt="ig-logo"/></a>
+            <button><img className="ig-logo" src={iglogo} alt="ig-logo"/></button>
             <div className="logo-container">
                 <img className="panda-logo" src={logo} alt="panda-logo"/>
             </div>
