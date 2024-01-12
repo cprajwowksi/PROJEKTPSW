@@ -10,6 +10,7 @@ function Home() {
         <div className="homepage">
 
             <Nav setSignUpClicked={setSignUpClicked}/>
+            <h1>Menu</h1>
             { signUpClicked ? <AuthModal setSignUpClicked={setSignUpClicked}/> : <Menu/>}
             <Footer/>
 

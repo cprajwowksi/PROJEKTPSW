@@ -1,0 +1,60 @@
+.extras-list {
+    display:flex;
+    flex-direction: column;
+    flex-wrap:wrap;
+    align-items: center;
+}
+
+.extras-list .extra-item{
+    display: flex;
+    padding: 2em;
+    margin:1em;
+    border-radius: 0.25em;
+    max-width: 33%;
+    transition: transform 0.3s ease-in-out;
+    align-items: center;
+}
+.extras-list .extra-item:hover{
+    transform: scale(1.05);
+}
+
+
+.extras-list button {
+    border:none;
+    height: 3em;
+    border-radius: 1em;
+
+    margin:0.25em;
+    padding-right:2em;
+    padding-left:2em;
+    font-size: 1.25em;
+    letter-spacing: 0.1em;
+    transition: background-color 0.3s ease-in-out; /* Dodano płynne przejście */
+
+}
+
+.extras-list button:hover{
+    cursor:pointer;
+    background-color: black;
+    border: 1px solid white;
+    color: white;
+}
+
+.extras-list .extra-item h3, p{
+  color:white;
+    font-size: 1.5em;
+}
+.extras-list h1{
+    color: white;
+    font-size: 3.5em;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+
+}
+.extras-list .extras{
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: space-around;
+}

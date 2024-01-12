@@ -15,15 +15,15 @@
     padding: 2em;
     margin:1em;
     border-radius: 0.25em;
-    max-width: 33%;
+    max-width: 50%;
     flex-direction: column;
     transition: transform 0.3s ease-in-out;
 
 }
 .ramen-list .ramenlist-item:hover{
     transform: scale(1.05);
-
 }
+
 .ramen-list .list-header i,p{
     padding: 0.25em;
     margin:0;

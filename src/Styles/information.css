@@ -1,0 +1,22 @@
+.info-page{
+
+    color:white;
+    background-color: black;
+
+}
+
+.info-page .info {
+    display:flex;
+    justify-content: space-around;
+}
+
+.info-page .info div h2{
+    font-size: 3.5em;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+.info-page .info div div{
+     font-size: 1.5rem;
+     text-transform: uppercase;
+     letter-spacing: 0.15em;
+ }

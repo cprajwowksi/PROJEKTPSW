@@ -1,0 +1,27 @@
+.menu-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.menu-page .choose-buttons{
+    margin: 1.5em;
+
+}
+.menu-page .choose {
+    color:white;
+    border-radius: 0.5em;
+    margin: 0.5em;
+    background-color: black;
+    border:1px solid #b7b7b7;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    width: 7em;
+    height: 3.5em;
+    transition: background-color 0.3s; /* Dodaj płynne przejścia */
+
+}
+.menu-page .choose:hover {
+    background-color: #262626; /* Zmiana koloru tła na hover */
+    cursor: pointer;
+}

@@ -32,9 +32,8 @@ function RamenList({ramenList}) {
                         <div className="przyciski">
                             <button className="dodaj">Dodaj do zamówienia</button>
                             <button className="opinie">Opinie</button>
-
+                            <button className="edytuj">Edytuj</button>
                         </div>
-
                     </div>
                 )
             })}

@@ -2,6 +2,7 @@ import Home from "./pages/Home";
 import Onboarding from "./pages/OnBoarding";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MenuPage from "./pages/MenuPage";
+import Information from "./pages/Information";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
                 <Route path="/onboarding" element={<Onboarding/>}/>
                 {/*{ authToken && <Route path="/profile" element={<Profile/>}/>}*/}
                 <Route path="/menu" element={<MenuPage/>}/>
+                <Route path="/info" element={<Information/>}/>
+
             </Routes>
         </BrowserRouter>
     </div>

@@ -1,20 +1,20 @@
 import logo from '../img/image.png'
-import fblogo from '../img/fblogo.png'
-import iglogo from '../img/iglogo.png'
+import {useNavigate} from "react-router-dom";
+
 
 function Nav({ setSignUpClicked }) {
-
+    const navigate = useNavigate()
     return (
         <nav>
             <button onClick={() => setSignUpClicked(true)}>ZALOGUJ</button>
-            <button><img className="fb-logo" src={fblogo} alt="ig-logo"/></button>
-            <button><img className="ig-logo" src={iglogo} alt="ig-logo"/></button>
-            <div className="logo-container">
+            <a><i className="fa-brands fa-square-facebook"></i></a>
+            <a><i className="fa-brands fa-instagram"></i></a>
+            <div className="logo-container" onClick={() => navigate('/')}>
                 <img className="panda-logo" src={logo} alt="panda-logo"/>
             </div>
-            <button>605412523 &#9742; </button>
-            <button>ZAMOW</button>
-            <button>INFO</button>
+            <button> <i className="fa-solid fa-phone"></i></button>
+            <button><i className="fa-solid fa-basket-shopping"></i></button>
+            <button onClick={() => navigate('/info')}>INFO</button>
         </nav>
     );
 }
