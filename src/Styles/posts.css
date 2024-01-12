@@ -1,0 +1,51 @@
+.posts {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 6em;
+}
+
+.posts .post{
+    background-color: white;
+    padding:1em 6em 2em 2em;
+    margin:1em;
+    border-radius: 1em;
+    color: black;
+    max-width: 50%;
+}
+
+.posts .post h2{
+    font-size: 2em;
+}
+
+.posts .post div{
+    font-size: 1.5em;
+}
+
+.posts .post .post-button {
+    border:none;
+    background-color: white;
+    color: #7e7d7d;
+    font-size: 1.25em;
+}
+
+.posts .post .post-button:hover {
+    cursor: pointer;
+}
+
+.posts .post .post-buttons {
+    text-align: right;
+}
+
+.posts .post .delete-post:hover{
+    color: #770d0d;
+}
+
+.posts .post .edit-post:hover{
+    color:black;
+}
+
+.posts .post .post-footer{
+    color: #737373;
+    padding:0.5em;
+}

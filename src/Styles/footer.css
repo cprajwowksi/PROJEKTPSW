@@ -1,12 +1,13 @@
 .footer-footer {
     font-size: 3em;
-    margin: 1em;
+    margin: 0;
     display: flex;
     white-space: nowrap;
     overflow: hidden;
     position: fixed;
     bottom: 0;
     color: white;
+    pointer-events: none;
 }
 
 .marquee {

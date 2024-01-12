@@ -1,3 +1,8 @@
+.onboarding {
+    background-color: black;
+    color: white;
+}
+
 .onboarding h2{
     margin:2em;
     text-align: center;
@@ -23,6 +28,7 @@
 .onboarding form input {
     background-color: black;
     padding: 15px 30px;
+    color: white;
     margin: 10px 0;
     font-size: 15px;
     border: solid 2px rgb(219,219,219);
