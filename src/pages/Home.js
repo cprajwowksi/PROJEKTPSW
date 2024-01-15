@@ -29,7 +29,7 @@ function Home() {
             </div>
 
             <h1 ref={postsRef}>Aktualności</h1>
-            <Posts/>
+            { !signUpClicked ? <Posts/> : null}
         </div>
     );
 }

@@ -22,10 +22,10 @@ const Onboarding = () => {
         dob_year:"",
         show_gender: false,
         gender_identity:"man",
-        gender_interest:"woman",
-        url:"",
-        about:"",
-        matches: []
+        ulica:'',
+        miasto:'',
+        numer:''
+
     }
 
     const validation = Yup.object({
@@ -34,7 +34,6 @@ const Onboarding = () => {
         dob_month: Yup.number().required('Month Required').max(12, 'MONTH MAX 12'),
         dob_year: Yup.number().required('Year Required').max(2005, 'MIN 18 LAT'),
         show_gender: Yup.boolean(),
-        url: Yup.string(),
         about: Yup.string(),
     })
 
@@ -45,9 +44,9 @@ const Onboarding = () => {
             console.log('submitted')
             console.log(values)
             try{
-                const response = await axios.put('http://localhost:8000/user', { values})
+                const response = await axios.put('http://localhost:8000/user', { values })
                 const success = response.status === 200
-                if (success) navigate('/dashboard')
+                if (success) navigate('/')
             } catch (err) {
                 console.log(err)
             }
@@ -141,8 +140,37 @@ const Onboarding = () => {
 
                         </div>
                         <label htmlFor="adres">Adres</label>
-                        <input type="text"/>
+                        <div className="multiple-input-container">
+                            <input
+                                id="ulica"
+                                type="text"
+                                name="ulica"
+                                placeholder="ul."
+                                {...formik.getFieldProps('ulica')}
+                            />
 
+                            <input
+                                id="miasto"
+                                type="text"
+                                name="miasto"
+                                placeholder="Miasto"
+                                {...formik.getFieldProps('miasto')}
+                            />
+
+                            <input
+                                id="numer_domu"
+                                type="number"
+                                name="numer_domu"
+                                placeholder="Numer-Domu"
+                                {...formik.getFieldProps('numer')}
+                            />
+                            {/*<div className="dob-errors">*/}
+                            {/*    {formik.touched.dob_day && formik.errors.dob_day ? (<div>{formik.errors.dob_day}</div>) : null}*/}
+                            {/*    {formik.touched.dob_month && formik.errors.dob_month ? (<div>{formik.errors.dob_month}</div>) : null}*/}
+                            {/*    {formik.touched.dob_year && formik.errors.dob_year ? (<div>{formik.errors.dob_year}</div>) : null}*/}
+                            {/*</div>*/}
+
+                        </div>
                         <input type='submit'/>
 
                     </section>
