@@ -71,7 +71,22 @@ nav i:hover{
   cursor: pointer;
 }
 
+nav .basket-icon{
+  display:flex;
+}
 
+nav .basket-icon p{
+  display: flex;
+  align-items: center;
+  align-self: end;
+  justify-content: center;
+  background-color: #7c1a1a;
+  border-radius: 1em;
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  font-size: 1em;
+}
 /*------ MENU -----*/
 
 .menu{

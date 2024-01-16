@@ -6,6 +6,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+.ramen-list p{
+    font-size: 1.5em;
+}
 .ramen-list .list-header{
     display: flex;
     margin:0;

@@ -40,8 +40,8 @@
     color: white;
 }
 
-.extras-list .extra-item h3, p{
-  color:white;
+.extras-list .extra-item h3, .extras-list .extra-item p{
+    color:white;
     font-size: 1.5em;
 }
 .extras-list h1{

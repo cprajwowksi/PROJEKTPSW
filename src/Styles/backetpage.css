@@ -1,0 +1,54 @@
+.basket-page .basket{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 1.5em;
+}
+
+.basket-page .basket .basket-item{
+    color: black;
+    background-color: whitesmoke;
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    margin:1em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+    max-width: 33%;
+    transition: transform 0.3s ease-in-out;
+
+}
+
+.basket-page .basket .basket-item:hover{
+    transform: scale(1.05);
+}
+.basket-page .basket .basket-item div{
+    text-transform: uppercase;
+    padding: 1em;
+    margin:1em;
+}
+
+.basket-page .basket i:hover{
+    cursor: pointer;
+    color: #7c1a1a;
+}
+
+.basket-page .price h2 {
+    text-align: center;
+    color: white;
+    font-size: 2em;
+    text-transform: uppercase;
+}
+
+.zamow {
+    text-align: center;
+}
+
+.zamow button {
+    border: none;
+    background-color: white;
+    border-radius: 1em;
+    font-size: 1.5em;
+    padding:1.25em;
+    color:black;
+}

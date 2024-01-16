@@ -34,7 +34,6 @@ const Onboarding = () => {
         dob_month: Yup.number().required('Month Required').max(12, 'MONTH MAX 12'),
         dob_year: Yup.number().required('Year Required').max(2005, 'MIN 18 LAT'),
         show_gender: Yup.boolean(),
-        about: Yup.string(),
     })
 
     const formik = useFormik({

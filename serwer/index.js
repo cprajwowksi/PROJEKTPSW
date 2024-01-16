@@ -98,7 +98,6 @@ app.get('/user', async (req, res) => {
 app.put('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const formData = req.body.values
-    console.log(formData)
     try {
 
         await client.connect()
@@ -128,8 +127,40 @@ app.put('/user', async (req, res) => {
 })
 
 
+app.get('/opinie', async (req, res) => {
+    const client = new MongoClient(uri)
+    const foodId = req.query.foodId
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const users = database.collection('food')
+        const query = { _id: new ObjectId(foodId) };
+        console.log(foodId)
 
+        const opinie = await users.findOne(query, { projection: { "_id": 0, "opinie": 1 } });
+        res.send(opinie.opinie)
+    } finally {
+        await client.close()
+    }
+})
 
+app.get('/food', async (req, res) => {
+    const client = new MongoClient(uri)
+    const type = req.query.type
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const foods = database.collection('food')
+        const query = { type: type }
+        console.log(type)
+        const opinie = await foods.find(query).toArray()
+        console.log(opinie)
+
+        res.send(opinie)
+    } finally {
+        await client.close()
+    }
+})
 
 app.listen(PORT,
     () => console.log(`Server running on port ${PORT}`))

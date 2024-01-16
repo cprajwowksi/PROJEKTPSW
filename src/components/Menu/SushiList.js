@@ -1,4 +1,8 @@
+import {useBasketContext} from "../Context/BasketProvider";
+
 function SushiList({sushiLists}) {
+    const { addBasketContext } = useBasketContext()
+
     return (
         <div className="ramen-list">
             {sushiLists.map(sushi => {
@@ -30,7 +34,7 @@ function SushiList({sushiLists}) {
                             })}
                         </div>
                         <div className="przyciski">
-                            <button className="dodaj">Dodaj do zamówienia</button>
+                            <button className="dodaj" onClick={() => addBasketContext(sushi)}>Dodaj do zamówienia</button>
                             <button className="opinie">Opinie</button>
                             <button className="edytuj">Edytuj</button>
                         </div>
