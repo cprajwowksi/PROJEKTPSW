@@ -79,6 +79,20 @@ app.post('/login', async (req, res) => {
 
 
 })
+app.get('/users',async (req, res) => {
+    const client = new MongoClient(uri)
+
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const users = database.collection('users')
+        const returnedUsers = await users.find().toArray()
+        res.send(returnedUsers)
+
+    } finally {
+        await client.close()
+    }
+})
 
 app.get('/user', async (req, res) => {
     const client = new MongoClient(uri)
@@ -95,6 +109,38 @@ app.get('/user', async (req, res) => {
     }
 })
 
+app.get('/users/search', async (req, res) => {
+    const client = new MongoClient(uri)
+    const regex = req.query.pattern;
+    console.log(regex)
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const users = database.collection('users')
+        const regexQuery = { first_name: { $regex: regex, $options: 'i' } };
+        const user = await users.find(regexQuery).toArray()
+        console.log(user)
+        res.send(user)
+    } finally {
+        await client.close()
+    }
+});
+app.delete('/user', async (req, res) => {
+    const client = new MongoClient(uri)
+    const userId = req.query.userId
+    console.log(userId)
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const users = database.collection('users')
+        const query = { user_id: userId }
+        const user = await users.deleteOne(query)
+        console.log('deleted', user)
+        res.send(user)
+    } finally {
+        await client.close()
+    }
+})
 app.put('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const formData = req.body.values
@@ -126,24 +172,133 @@ app.put('/user', async (req, res) => {
     }
 })
 
-
-app.get('/opinie', async (req, res) => {
+app.patch('/user', async (req, res) => {
     const client = new MongoClient(uri)
-    const foodId = req.query.foodId
-    try{
+    const formData = req.body.values
+    console.log(formData)
+    try {
+
         await client.connect()
         const database = client.db('Panda')
-        const users = database.collection('food')
-        const query = { _id: new ObjectId(foodId) };
-        console.log(foodId)
+        const users = database.collection('users')
 
-        const opinie = await users.findOne(query, { projection: { "_id": 0, "opinie": 1 } });
-        res.send(opinie.opinie)
+        const query = { user_id: formData.user_id }
+        const updateDocument = {
+            $set: {
+                first_name: formData.first_name,
+                dob_day: formData.dob_day,
+                dob_month: formData.dob_month,
+                dob_year: formData.dob_year,
+                gender_identity: formData.gender_identity,
+                adres: {
+                    ulica: formData.ulica,
+                    miasto: formData.miasto,
+                    numer: formData.numer
+                }
+            }
+        }
+        const modifiedUser = await users.updateOne(query, updateDocument)
+        res.send(modifiedUser)
     } finally {
         await client.close()
     }
 })
 
+app.get('/opinie', async (req, res) => {
+    const client = new MongoClient(uri)
+    const foodId = req.query.foodId
+    if (foodId !== undefined){
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const users = database.collection('food')
+        const query = { _id: new ObjectId(foodId) };
+        const opinie = await users.findOne(query, { projection: { "_id": 0, "opinie": 1 } });
+        res.send(opinie.opinie)
+    } finally {
+        await client.close()
+    }
+    }
+})
+
+app.post('/opinia', async (req, res) => {
+    const client = new MongoClient(uri)
+    const formattedOpinia = req.body.params.formattedOpinia
+    if (formattedOpinia !== undefined){
+        try{
+            await client.connect()
+            const database = client.db('Panda')
+            const foods = database.collection('food')
+            const opiniaBezFoodId = { ...formattedOpinia };
+            delete opiniaBezFoodId.foodId;
+            const result = await foods.updateOne(
+                { _id: new ObjectId(formattedOpinia.foodId) },
+                { $push: { opinie: opiniaBezFoodId } }
+            );            // res.send(opinie.opinie)
+
+            console.log(result)
+        } finally {
+            await client.close()
+        }
+    }
+})
+
+app.delete('/opinia', async (req, res) => {
+    const client = new MongoClient(uri)
+    const formattedOpinia = req.body.formattedOpinia
+    if (formattedOpinia !== undefined){
+        try{
+            await client.connect()
+            const database = client.db('Panda')
+            const foods = database.collection('food')
+            console.log(formattedOpinia)
+            const opiniaBezFoodId = { ...formattedOpinia };
+            delete opiniaBezFoodId.foodId;
+            const result = await foods.updateOne(
+                { _id: new ObjectId(formattedOpinia.foodId) },
+                { $pull: { opinie: opiniaBezFoodId } }
+            );            // res.send(opinie.opinie)
+
+            console.log(result)
+        } finally {
+            await client.close()
+        }
+    }
+})
+
+app.put('/opinia', async (req, res) => {
+    const client = new MongoClient(uri)
+    const formattedOpinia = req.body.data.formattedOpinia
+    const drugaOpinia = req.body.data.drugaOpinia
+    console.log(formattedOpinia, drugaOpinia)
+    if (formattedOpinia !== undefined){
+        try{
+            await client.connect()
+            const database = client.db('Panda')
+            const foods = database.collection('food')
+            console.log(formattedOpinia)
+            const opiniaBezFoodId = { ...formattedOpinia };
+            delete opiniaBezFoodId.foodId;
+            const opinia2 = { ...drugaOpinia}
+            delete opinia2.foodId;
+
+            await foods.updateOne(
+                { _id: new ObjectId(formattedOpinia.foodId) },
+                { $pull: { opinie: opiniaBezFoodId } }
+            );
+
+            const dodaj = await foods.updateOne(
+                { _id: new ObjectId(formattedOpinia.foodId) },
+                { $push: { opinie: opinia2 } }
+            );
+            // res.send(opinie.opinie)
+
+            console.log(dodaj)
+        } finally {
+            await client.close()
+        }
+    }
+})
 app.get('/food', async (req, res) => {
     const client = new MongoClient(uri)
     const type = req.query.type
@@ -152,15 +307,100 @@ app.get('/food', async (req, res) => {
         const database = client.db('Panda')
         const foods = database.collection('food')
         const query = { type: type }
-        console.log(type)
         const opinie = await foods.find(query).toArray()
-        console.log(opinie)
 
         res.send(opinie)
     } finally {
         await client.close()
     }
 })
+
+
+app.post('/zamowienie', async (req, res) => {
+    const client = new MongoClient(uri)
+    const zamowienie = req.body.data
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const zamowienia = database.collection('Zamowienia')
+        const insertedZamowienie = await zamowienia.insertOne(zamowienie)
+        console.log(insertedZamowienie)
+        res.send(insertedZamowienie)
+
+    } finally {
+        await client.close()
+    }
+})
+
+app.get('/messages',async (req, res) => {
+        const client = new MongoClient(uri)
+        const userId = req.query.userId
+        const toId = req.query.toId
+        try{
+            await client.connect()
+            const database = client.db('Panda')
+            const messages = database.collection('messages')
+
+            const query = {
+                from_id: userId,
+                to_id:toId
+            }
+
+            const foundMessages = await messages.find(query).toArray()
+            res.send(foundMessages)
+        } finally {
+            await client.close()
+        }
+    }
+)
+
+app.post('/messages', async(req ,res) => {
+    const client = new MongoClient(uri)
+    const message = req.body.data.message
+    console.log(message)
+    try {
+        await client.connect()
+        const database = client.db('Panda')
+        const messages = database.collection('messages')
+        const insertedmessage = await messages.insertOne(message)
+        res.send(insertedmessage)
+
+    } finally {
+        await client.close()
+    }
+})
+
+app.delete('/message', async (req, res) => {
+    const client = new MongoClient(uri);
+    const messageId = req.body.message._id;
+
+    try {
+        await client.connect();
+        const database = client.db('Panda');
+        const messages = database.collection('messages');
+        const deletedMessage = await messages.deleteOne({ _id: new ObjectId(messageId) });
+
+        res.send(deletedMessage);
+    } finally {
+        await client.close();
+    }
+});
+
+app.put('/message', async (req, res) => {
+    const client = new MongoClient(uri);
+    const editedMessage = req.body.data.edited
+    const messageId = req.body.data.message._id;
+    try {
+        await client.connect();
+        const database = client.db('Panda');
+        const messages = database.collection('messages');
+        await messages.deleteOne({ _id: new ObjectId(messageId) });
+        const edited = await messages.insertOne(editedMessage)
+        res.send(edited);
+    } finally {
+        await client.close();
+    }
+});
 
 app.listen(PORT,
     () => console.log(`Server running on port ${PORT}`))

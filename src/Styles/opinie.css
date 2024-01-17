@@ -1,0 +1,59 @@
+.opinie-component{
+    position: absolute;
+    background-color: white;
+    padding:2em;
+    border-radius: 1em;
+    color: black;
+    width: 25%;
+}
+
+.delete-opinia{
+    margin: 1em;
+}
+.delete-opinia:hover{
+    cursor: pointer;
+    margin: 1em;
+    color: #7c1a1a;
+}
+
+.opinie-component .fa-xmark {
+    padding: 0;
+    margin:0;
+    font-size: 1.5em;
+}
+
+.opinie-component .fa-solid:hover{
+    cursor: pointer;
+}
+.opinie-component form {
+    display: flex;
+    flex-direction: column;
+}
+
+.opinie-component input {
+    padding: 0.5em;
+    margin:0.25em;
+}
+
+.opinie-component h2{
+    margin-top: 0.25em;
+    text-align: center;
+}
+.opinie-component .fa-xmark:hover {
+   cursor: pointer;
+}
+
+.fa-rotate-right {
+    font-size: 2em;
+    display: inline-block;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

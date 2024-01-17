@@ -3,19 +3,16 @@ import {useState, useRef} from "react";
 import Opinie from '../Opinie';
 function RamenList({ramenList}) {
 
-    const [opinieClicked, setOpinieClicked] = useState(false)
     const [clicked, setClicked ] = useState(null)
-    const selected = useRef(null)
     const handleOpinie = (ramen) => {
-        setOpinieClicked(true)
-        selected.current=ramen
-        setClicked(selected.current)
+        setClicked(ramen)
+        console.log(clicked)
     }
 
     const { addBasketContext } = useBasketContext()
     return (
         <div className="ramen-list">
-            <Opinie food={clicked}/>
+            {clicked ? <Opinie food={clicked} setClicked={setClicked}/> : null}
             {ramenList.map(ramen => {
                 return (
                     <div className="ramenlist-item">
