@@ -86,3 +86,25 @@
     color: white;
 }
 
+.fa-x:hover{
+    cursor: pointer;
+    color: #7c1a1a;
+}
+
+.ramen-input form{
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+
+}
+.ramen-input form input{
+   padding: 1em;
+    font-size: 1em;
+    margin:0.5em;
+    width: 50vh;
+}
+
+.ramen-input form label{
+    letter-spacing: 0.1em;
+    font-size: 2em;
+}

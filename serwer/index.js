@@ -314,8 +314,37 @@ app.get('/food', async (req, res) => {
         await client.close()
     }
 })
+app.delete('/food', async (req, res) => {
+    const client = new MongoClient(uri)
+    const foodId = req.body._id
+    try{
+        await client.connect()
+        const database = client.db('Panda')
+        const foods = database.collection('food')
+        const query = { _id: new ObjectId(foodId)}
+        const opinie = await foods.deleteOne(query)
 
+        res.send(opinie)
+    } finally {
+        await client.close()
+    }
+})
+app.post('/food', async(req ,res) => {
+    const client = new MongoClient(uri)
+    const food = req.body.data.formattedValues
+    console.log(food)
+    try {
+        await client.connect()
+        const database = client.db('Panda')
+        const foods = database.collection('food')
+        const instertedFood = await foods.insertOne(food)
+        console.log('Dodane!')
+        res.send(instertedFood)
 
+    } finally {
+        await client.close()
+    }
+})
 app.post('/zamowienie', async (req, res) => {
     const client = new MongoClient(uri)
     const zamowienie = req.body.data

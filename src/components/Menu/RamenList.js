@@ -1,14 +1,28 @@
 import {useBasketContext} from "../Context/BasketProvider";
 import {useState, useRef} from "react";
 import Opinie from '../Opinie';
+import {useCookies} from "react-cookie";
+import axios from "axios";
+import RamenInput from "./RamenInput";
 function RamenList({ramenList}) {
-
+    const [selected, setSelected ] = useState(null)
+    const [ cookie, setCookie, removeCookie ] = useCookies(['user'])
     const [clicked, setClicked ] = useState(null)
     const handleOpinie = (ramen) => {
         setClicked(ramen)
         console.log(clicked)
     }
 
+    const deleteFood = async (food) => {
+        console.log(food)
+        try {
+            const response = await axios.delete('http://localhost:8000/food', { data: food})
+            console.log(response)
+        } catch {
+
+        }
+    }
+    console.log(cookie.UserId)
     const { addBasketContext } = useBasketContext()
     return (
         <div className="ramen-list">
@@ -44,14 +58,12 @@ function RamenList({ramenList}) {
                         <div className="przyciski">
                             <button className="dodaj" onClick={() => addBasketContext(ramen)}>Dodaj do zamówienia</button>
                             <button className="opinie" onClick={() => handleOpinie(ramen)}>Opinie</button>
-                            <button className="edytuj">Edytuj</button>
+                            { cookie.UserId === "8d0c54a6-e85d-4426-82a2-21afcedc1e9f" ? <button onClick={() => deleteFood(ramen)}><i className="fa-solid fa-x" ></i></button> : null}
                         </div>
                     </div>
                 )
             })}
-            <form>
-                <input/>
-            </form>
+            <RamenInput selected={selected}/>
         </div>
     );
 }

@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Posts from "../components/Posts";
 import AuthModal from "../components/Authentication/AuthModal";
 import { useState, useRef } from "react";
+import Reklamy from "../components/Reklamy/reklamy";
 
 function Home() {
     const [signUpClicked, setSignUpClicked] = useState(false);
@@ -20,6 +21,7 @@ function Home() {
         <div className="homepage">
 
             <Nav setSignUpClicked={setSignUpClicked}/>
+            <Reklamy/>
             <h1>Menu</h1>
             { signUpClicked ? <AuthModal setSignUpClicked={setSignUpClicked}/> : <Menu/>}
             <Footer/>
