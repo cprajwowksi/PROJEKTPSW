@@ -4,16 +4,55 @@ import { useCookies } from "react-cookie";
 
 import { useUserContext } from "./UserProvider";
 import { useBasketContext } from "./Context/BasketProvider";
+import mqtt from "mqtt";
+import {useEffect, useState} from "react";
 
 function Nav({ setSignUpClicked }) {
 
     const [cookies, setCookie, removeCookie ] = useCookies(['user'])
+    const [infoMessage, setInfoMessage] = useState(
+        localStorage.getItem('infoMessage') || ''
+    );
 
-    const logout = () => {
+    useEffect(() => {
+        const infoClient = mqtt.connect('ws://localhost:9000/mqtt');
+
+        infoClient.on('connect', () => {
+
+            infoClient.subscribe('infoClient', (err) => {
+                if (!err) {
+                    console.log('Subskrypcja udana!');
+                } else {
+                    console.error('Błąd podczas subskrybowania:', err);
+                }
+            });
+        });
+
+        infoClient.on('message', (topic, message) => {
+            const receivedMessage = message.toString();
+            setInfoMessage(receivedMessage);
+            localStorage.setItem('infoMessage', receivedMessage);
+        });
+
+        return () => {
+            infoClient.end();
+        };
+    }, []);
+
+    const logout = async () => {
+
+        const client = mqtt.connect("ws://localhost:9000/mqtt");
+
+        client.on("connect", () => {
+            client.publish("logout", Math.round(Math.random() * 5 + 20, 2).toString());
+            window.location.reload();
+            navigate('/')
+            client.end()
+        })
+
         removeCookie('UserId', cookies.UserId)
         removeCookie('AuthToken', cookies.AuthToken)
-        navigate('/')
-        window.location.reload()
+
     }
 
     const { user } = useUserContext();
@@ -21,9 +60,11 @@ function Nav({ setSignUpClicked }) {
     const { basket } = useBasketContext();
 
     const navigate = useNavigate()
+
+
     return (
         <nav>
-
+            <p className="mqtt-count">Ilosc zalogowanych użytkownikow to: {infoMessage}</p>
             {!user ? <button onClick={() => setSignUpClicked(true)}> ZALOGUJ </button> :
                     <button onClick={() => navigate('/profile')}>{user.first_name}</button>
             }

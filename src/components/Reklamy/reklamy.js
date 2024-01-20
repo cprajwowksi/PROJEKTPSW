@@ -7,6 +7,7 @@ function Reklamy() {
         es.addEventListener("message", function(event) {
             const newElement = document.createElement("li");
             const eventList = document.getElementById("list");
+            console.log(event.data)
             newElement.textContent = event.data;
 
             eventList.innerHTML = "";

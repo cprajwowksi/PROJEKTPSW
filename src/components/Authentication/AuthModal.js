@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { useState } from 'react';
+import {useEffect, useState , useRef} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import mqtt from "mqtt";
 
 const AuthModal = ({ setSignUpClicked }) => {
     const [cookie, setCookie] = useCookies(['user']);
@@ -36,21 +37,26 @@ const AuthModal = ({ setSignUpClicked }) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
+
                 const response = await axios.post(`http://localhost:8000/${isSignUp ? 'signup' : 'login'}`, {
                     email: values.email,
                     password: values.password,
                 });
 
+                const success = response.status === 201;
+
                 setCookie('Email', response.data.email);
                 setCookie('UserId', response.data.userId);
                 setCookie('AuthToken', response.data.token);
 
-                const success = response.status === 201;
-
                 if (success && isSignUp) navigate('/onboarding');
-                // if (success && !isSignUp) navigate('/dashboard');
 
-                window.location.reload();
+                const client = mqtt.connect("ws://localhost:9000/mqtt");
+
+                client.on("connect", () => {
+                    client.publish("login", Math.round(Math.random() * 5 + 20, 2).toString());
+                    window.location.reload();
+                })
             } catch (error) {
                 console.log(error);
             }

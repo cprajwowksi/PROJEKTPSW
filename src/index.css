@@ -11,6 +11,7 @@ body {
 
 }
 .reklamy{
+  position: absolute;
   color:white;
 }
 code {
@@ -26,7 +27,11 @@ nav{
   margin-bottom: 3em;
   padding:1em;
 }
-
+nav .mqtt-count{
+  position: absolute;
+  top: 10em;
+  text-transform: uppercase;
+}
 nav * {
   background-color: black;
   color:white;

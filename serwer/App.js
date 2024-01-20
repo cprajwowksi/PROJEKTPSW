@@ -1,5 +1,5 @@
 'use strict';
-const json = require('./reklamy.json');
+const json = require('./dobrereklamy.json');
 
 const connect = require("connect");
 
@@ -30,7 +30,6 @@ app.use(function(req, res) {
 });
 
 setInterval(() => {
-    console.log(json)
     const randIndex = Math.floor(Math.random() * json.advertising.length)
     const randomowaReklama = json.advertising[randIndex].description;
     dateChannel.send(randomowaReklama);

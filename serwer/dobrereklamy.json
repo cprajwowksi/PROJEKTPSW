@@ -2,25 +2,25 @@
   "advertising": [
     {
       "id": 1,
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "description": "Tylko dziś! Ramen krewetkowy ramen z pod lady!",
       "imageUrl": "https://example.com/image1.jpg",
       "link": "https://example.com/landing-page1"
     },
     {
       "id": 2,
-      "description": "Aenean euismod bibendum laoreet.",
+      "description": "Najlepszy makaron z Japonii, sami produkujemy na Hokkaido.",
       "imageUrl": "https://example.com/image2.jpg",
       "link": "https://example.com/landing-page2"
     },
     {
       "id": 3,
-      "description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+      "description": "Zatrudnimy pracownika na stanowisko dostawcy, wiecej informacji w linku!",
       "imageUrl": "https://example.com/image3.jpg",
       "link": "https://example.com/landing-page3"
     },
     {
       "id": 4,
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "description": "Legendarne patyczki z góry Niedzwiedzia Białego Niepolarnego Fuji.",
       "imageUrl": "https://example.com/image1.jpg",
       "link": "https://example.com/landing-page1"
     },
