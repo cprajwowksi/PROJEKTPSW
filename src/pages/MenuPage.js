@@ -74,8 +74,8 @@ function MenuPage() {
                 <button className="sushi-choose choose" onClick={() => dispatch({type: 'SUSHI_CLICKED'})}>Sushi</button>
                 <button className="extras-choose choose" onClick={() => dispatch({type: 'EXTRAS_CLICKED'})}>Extras</button>
             </div>
-            {state.ramenClicked ? <RamenList ramenList={state.ramenList}/> : null}
-            {state.sushiClicked ? <SushiList sushiLists={state.sushiList}/> : null }
+            {state.ramenClicked ? <RamenList ramenList={state.ramenList} dispatch={dispatch}/> : null}
+            {state.sushiClicked ? <SushiList sushiLists={state.sushiList} dispatch={dispatch}/> : null }
             { state.extrasClicked ? <Extras extras={extras}/> : null }
             <button className="choose">Edytuj karte</button>
 

@@ -1,7 +1,11 @@
 .opinie-component{
-    position: absolute;
+    position: fixed;
+    top: 5em;
+    z-index: 999;
+
     background-color: white;
     padding:2em;
+    margin: 0 auto;
     border-radius: 1em;
     color: black;
     width: 25%;

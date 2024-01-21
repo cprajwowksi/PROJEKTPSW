@@ -2,7 +2,6 @@
 
     color:white;
     background-color: black;
-
 }
 
 .info-page .info {
@@ -20,3 +19,12 @@
      text-transform: uppercase;
      letter-spacing: 0.15em;
  }
+
+.chat-info{
+    margin: 0 auto;
+    margin-bottom: 2em;
+    font-size: 2em;
+    text-transform: uppercase;
+    text-align: center;
+    width: 33%;
+}

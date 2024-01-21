@@ -39,7 +39,6 @@ app.post('/signup', async (req, res) => {
             email:sanitizedEmail,
             hashed_password:hashedpassword
         }
-        console.log(data, "lool")
         const insertedUser = await users.insertOne(data)
 
         const token = jwt.sign(insertedUser, sanitizedEmail, {
@@ -62,13 +61,11 @@ app.post('/login', async (req, res) => {
         const user = await users.findOne({email})
 
         const correctPassword = await bcrypt.compare(password, user.hashed_password)
-        console.log("Raczej nikogo takiego ine ma ale chociaz sie wysyla")
         if (user && correctPassword) {
             const token = jwt.sign(
                 user,
                 email,
                 {expiresIn: 60 * 24})
-            console.log(token)
             return res.status(201).json({token, userId: user.user_id, email})
         }
         return res.status(400).send('Invalid')
@@ -112,14 +109,12 @@ app.get('/user', async (req, res) => {
 app.get('/users/search', async (req, res) => {
     const client = new MongoClient(uri)
     const regex = req.query.pattern;
-    console.log(regex)
     try{
         await client.connect()
         const database = client.db('Panda')
         const users = database.collection('users')
         const regexQuery = { first_name: { $regex: regex, $options: 'i' } };
         const user = await users.find(regexQuery).toArray()
-        console.log(user)
         res.send(user)
     } finally {
         await client.close()
@@ -128,14 +123,12 @@ app.get('/users/search', async (req, res) => {
 app.delete('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const userId = req.query.userId
-    console.log(userId)
     try{
         await client.connect()
         const database = client.db('Panda')
         const users = database.collection('users')
         const query = { user_id: userId }
         const user = await users.deleteOne(query)
-        console.log('deleted', user)
         res.send(user)
     } finally {
         await client.close()
@@ -175,7 +168,6 @@ app.put('/user', async (req, res) => {
 app.patch('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const formData = req.body.values
-    console.log(formData)
     try {
 
         await client.connect()
@@ -236,7 +228,6 @@ app.post('/opinia', async (req, res) => {
                 { $push: { opinie: opiniaBezFoodId } }
             );            // res.send(opinie.opinie)
 
-            console.log(result)
         } finally {
             await client.close()
         }
@@ -251,7 +242,6 @@ app.delete('/opinia', async (req, res) => {
             await client.connect()
             const database = client.db('Panda')
             const foods = database.collection('food')
-            console.log(formattedOpinia)
             const opiniaBezFoodId = { ...formattedOpinia };
             delete opiniaBezFoodId.foodId;
             const result = await foods.updateOne(
@@ -270,13 +260,11 @@ app.put('/opinia', async (req, res) => {
     const client = new MongoClient(uri)
     const formattedOpinia = req.body.data.formattedOpinia
     const drugaOpinia = req.body.data.drugaOpinia
-    console.log(formattedOpinia, drugaOpinia)
     if (formattedOpinia !== undefined){
         try{
             await client.connect()
             const database = client.db('Panda')
             const foods = database.collection('food')
-            console.log(formattedOpinia)
             const opiniaBezFoodId = { ...formattedOpinia };
             delete opiniaBezFoodId.foodId;
             const opinia2 = { ...drugaOpinia}
@@ -293,7 +281,6 @@ app.put('/opinia', async (req, res) => {
             );
             // res.send(opinie.opinie)
 
-            console.log(dodaj)
         } finally {
             await client.close()
         }
@@ -332,13 +319,11 @@ app.delete('/food', async (req, res) => {
 app.post('/food', async(req ,res) => {
     const client = new MongoClient(uri)
     const food = req.body.data.formattedValues
-    console.log(food)
     try {
         await client.connect()
         const database = client.db('Panda')
         const foods = database.collection('food')
         const instertedFood = await foods.insertOne(food)
-        console.log('Dodane!')
         res.send(instertedFood)
 
     } finally {
@@ -353,7 +338,6 @@ app.post('/zamowienie', async (req, res) => {
         const database = client.db('Panda')
         const zamowienia = database.collection('Zamowienia')
         const insertedZamowienie = await zamowienia.insertOne(zamowienie)
-        console.log(insertedZamowienie)
         res.send(insertedZamowienie)
 
     } finally {
@@ -386,7 +370,6 @@ app.get('/messages',async (req, res) => {
 app.post('/messages', async(req ,res) => {
     const client = new MongoClient(uri)
     const message = req.body.data.message
-    console.log(message)
     try {
         await client.connect()
         const database = client.db('Panda')

@@ -4,7 +4,7 @@ import Opinie from '../Opinie';
 import {useCookies} from "react-cookie";
 import axios from "axios";
 import RamenInput from "./RamenInput";
-function RamenList({ramenList}) {
+function RamenList({ramenList, dispatch}) {
     const [selected, setSelected ] = useState(null)
     const [ cookie, setCookie, removeCookie ] = useCookies(['user'])
     const [clicked, setClicked ] = useState(null)
@@ -14,16 +14,17 @@ function RamenList({ramenList}) {
     }
 
     const deleteFood = async (food) => {
-        console.log(food)
         try {
             const response = await axios.delete('http://localhost:8000/food', { data: food})
-            console.log(response)
+            dispatch({type: 'SET_RAMEN_LIST', payload: ramenList.filter(x => x !== food)})
+
         } catch {
 
         }
     }
-    console.log(cookie.UserId)
+
     const { addBasketContext } = useBasketContext()
+
     return (
         <div className="ramen-list">
             {clicked ? <Opinie food={clicked} setClicked={setClicked}/> : null}
@@ -63,7 +64,7 @@ function RamenList({ramenList}) {
                     </div>
                 )
             })}
-            <RamenInput selected={selected}/>
+            <RamenInput selected={selected} dispatch={dispatch} ramenList={ramenList}/>
         </div>
     );
 }

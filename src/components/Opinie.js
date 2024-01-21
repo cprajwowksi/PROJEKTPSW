@@ -29,6 +29,7 @@ function Opinie({food, setClicked}) {
         setEdit(e.target.value)
     }
     const handleSubmit = async (e) => {
+
         e.preventDefault();
 
         const formattedOpinia = {
@@ -37,19 +38,27 @@ function Opinie({food, setClicked}) {
             user: user,
             foodId: food._id
         }
+
+        const formattedv2Opinia = {
+            opinia: opinia,
+            date: new Date().toISOString(),
+            user: user,
+        }
+
+        setOpinie([...opinie, formattedv2Opinia])
         const postOpinia =  async () => {
             try {
+
                 const response = await axios.post(`http://localhost:8000/opinia`, {
                     params: { formattedOpinia }
                 })
-
+                setOpinie([...opinie, opinia])
             } catch(err) {
                 console.log(err)
             }
         }
 
         await postOpinia()
-        await getOpinie()
 
     }
     useEffect(() => {
@@ -57,26 +66,27 @@ function Opinie({food, setClicked}) {
     }, [food]);
 
 
-    const deletePost = async (opinia) => {
-        console.log(opinia)
+    const deletePost = async (opinias) => {
+
         const formattedOpinia = {
-            opinia: opinia.opinia,
-            date:   opinia.date,
-            user: opinia.user,
+            opinia: opinias.opinia,
+            date:   opinias.date,
+            user: opinias.user,
             foodId: food._id
         }
-        console.log("for", formattedOpinia)
+        setOpinie(opinie.filter(x => x !== opinias))
+
         try {
             await axios.delete(`http://localhost:8000/opinia`, {
                 data: { formattedOpinia }
             })
+
         } catch(err) {
             console.log(err)
         }
     }
 
     const editPost = async (opinia,edit) => {
-        console.log(opinia)
 
         const formattedOpinia = {
             opinia: opinia.opinia,
@@ -91,7 +101,14 @@ function Opinie({food, setClicked}) {
             user: opinia.user,
             foodId: food._id
         }
-        console.log("for", formattedOpinia)
+
+        const drugav2Opinia = {
+            opinia: edit,
+            date:   opinia.date,
+            user: opinia.user,
+        }
+
+        setOpinie(opinie.map(x => x === opinia ? drugav2Opinia : x ))
         try {
             await axios.put(`http://localhost:8000/opinia`, {
                 data: { formattedOpinia, drugaOpinia }
@@ -108,7 +125,7 @@ function Opinie({food, setClicked}) {
                 <h2>{food.name}</h2>
                 {opinie.map((opinia, index) => (
                     <div key={index}>
-                        <h4>{opinia.user.first_name}</h4> {opinia.opinia}
+                        <h4>{opinia.user.first_name ? opinia.user.first_name : 'anonymous'}</h4> {opinia.opinia}
 
                         <footer>
                             {opinia.date}

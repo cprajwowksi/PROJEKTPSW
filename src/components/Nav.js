@@ -43,10 +43,10 @@ function Nav({ setSignUpClicked }) {
 
         const client = mqtt.connect("ws://localhost:9000/mqtt");
 
-        client.on("connect", () => {
-            client.publish("logout", Math.round(Math.random() * 5 + 20, 2).toString());
-            window.location.reload();
+        client.on("connect", async () => {
+            await client.publishAsync("logout", Math.round(Math.random() * 5 + 20, 2).toString());
             navigate('/')
+            window.location.reload();
             client.end()
         })
 
@@ -62,6 +62,8 @@ function Nav({ setSignUpClicked }) {
     const navigate = useNavigate()
 
 
+
+
     return (
         <nav>
             <p className="mqtt-count">Ilosc zalogowanych użytkownikow to: {infoMessage}</p>
@@ -75,7 +77,7 @@ function Nav({ setSignUpClicked }) {
                 <img className="panda-logo" src={logo} alt="panda-logo"/>
             </div>
             <i className="fa-solid fa-phone"></i>
-            <div className="basket-icon" onClick={() => navigate('/basket')}><i className="fa-solid fa-basket-shopping"></i>{ basket.length != 0 ? <p>{basket.length}</p> : null }</div>
+            <div className="basket-icon" onClick={() => user? navigate('/basket') : navigate('/')}><i className="fa-solid fa-basket-shopping"></i>{ basket.length != 0 ? <p>{basket.length}</p> : null }</div>
             <button onClick={() => navigate('/info')}>INFO</button>
             { user ? <button onClick={logout}>WYLOGUJ</button>  : null}
         </nav>

@@ -1,32 +1,18 @@
-
 import * as Yup from 'yup'
-import {useCookies} from "react-cookie";
 import axios from "axios";
 import { useFormik } from 'formik';
-function RamenInput({selected}) {
-
-    const [ cookie, setCookie, removeCookie ] = useCookies(['user'])
-
-    const addFood = async (food) => {
-        console.log(food)
-        try {
-            const response = await axios.post('http://localhost:8000/food', { data: food})
-            console.log(response)
-        } catch {
-
-        }
-    }
+function RamenInput({selected, dispatch, ramenList}) {
 
 
     const initialValues = {
-        first_name: "",
+        name: "",
         subscription: "",
         ingredients: "",
         price: 0,
     };
 
     const validationSchema = Yup.object({
-        first_name: Yup.string().required('Required'),
+        name: Yup.string().required('Required'),
         subscription: Yup.string().required('Required'),
         ingredients: Yup.string().required('Required'),
         price: Yup.number().required('Required').min(0, 'Price must be greater than or equal to 0'),
@@ -42,6 +28,8 @@ function RamenInput({selected}) {
 
 
                 try {
+                    console.log('ale klika sie')
+                    dispatch({type:'SET_RAMEN_LIST', payload: [...ramenList, formattedValues]})
                     const response = await axios.post('http://localhost:8000/food', {
                         data: { formattedValues }
                     })
@@ -56,17 +44,17 @@ function RamenInput({selected}) {
             <div className="ramen-input">
                 <h1>Dodaj nowy Ramen</h1>
             <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="first_name">Name</label>
+                <label htmlFor="name">Name</label>
                 <input
-                    id="first_name"
-                    name="first_name"
+                    id="name"
+                    name="name"
                     type="text"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.first_name}
+                    value={formik.values.name}
                 />
-                {formik.touched.first_name && formik.errors.first_name ? (
-                    <div>{formik.errors.first_name}</div>
+                {formik.touched.name && formik.errors.name ? (
+                    <div>{formik.errors.name}</div>
                 ) : null}
 
                 <label htmlFor="subscription">Subscription</label>

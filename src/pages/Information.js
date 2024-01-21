@@ -1,8 +1,9 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import {useState} from "react";
+import {useReducer, useState} from "react";
 import ChatHTTPS from "../components/chat/Chat";
 import axios from "axios";
+import ChatMQTT from "../components/chat/ChatMQTT";
 function Information() {
     const [ regex, setRegex ] = useState("")
     const [ users, setUsers] = useState([])
@@ -19,7 +20,15 @@ function Information() {
             console.log(err)
         }
     }
-
+    const reducer = (state, action) => {
+        switch (action.type){
+            case 'http':
+                return { ...state, http: true, mqtt: false}
+            case 'mqtt':
+                return { ...state, http: false, mqtt: true}
+        }
+    }
+    const [state, dispatch] = useReducer(reducer, { http: false, mqtt: false})
     return (
         <div className="info-page">
             <Nav/>
@@ -41,11 +50,8 @@ function Information() {
                         <div className="info-phone">
                             <i className="fa-solid fa-phone"></i> 787 787 926
                         </div>
-                        <div className="chat">
-                            <ChatHTTPS/>
-                        </div>
-                    </div>
 
+                    </div>
                 </div>
                 <div className="info-godziny">
                     <h2>Godziny otwarcia</h2>
@@ -59,6 +65,14 @@ function Information() {
                     <i className="fa-solid fa-magnifying-glass" onClick={() => szukajWzorzec()}></i>
                     {users.map((x) => <p>{x.first_name}</p>)}
                 </div>
+
+            </div>
+            <div className="chat-info">
+                <h1>CHAT DO RESTARUACJI</h1>
+                <button className="auth-modal-button" onClick={() => dispatch({type: 'http'})}>HTTP</button>
+                <button className="auth-modal-button" onClick={() => dispatch({type: 'mqtt'})}>MQTT</button>
+                {state.http ? <ChatHTTPS/> : null}
+                {state.mqtt ? <ChatMQTT/> : null}
             </div>
             <Footer/>
         </div>

@@ -53,9 +53,13 @@ const AuthModal = ({ setSignUpClicked }) => {
 
                 const client = mqtt.connect("ws://localhost:9000/mqtt");
 
-                client.on("connect", () => {
-                    client.publish("login", Math.round(Math.random() * 5 + 20, 2).toString());
-                    window.location.reload();
+                const userId = response.data.userId;
+
+                const jsonData = JSON.stringify({ userId });
+                console.log('logujemy logujemy')
+                client.on("connect", async () => {
+                     await client.publishAsync("login", jsonData);
+                     window.location.reload();
                 })
             } catch (error) {
                 console.log(error);

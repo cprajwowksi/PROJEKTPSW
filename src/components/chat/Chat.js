@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import axios, {post} from "axios";
 import {useCookies} from "react-cookie";
-import mqtt from 'mqtt'
 
 
 function ChatHTTPS() {
@@ -61,9 +60,6 @@ function ChatHTTPS() {
 
 
 
-
-
-
     const getMyMessages =  async () => {
 
         try {
@@ -88,7 +84,6 @@ function ChatHTTPS() {
         }
     }
     const getUsers =  async () => {
-
         try {
             const response = await axios.get(`http://localhost:8000/users`)
             setUsers(response.data)
@@ -96,6 +91,7 @@ function ChatHTTPS() {
             console.log(err)
         }
     }
+
     useEffect(() => {
         if (cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f') {
             getUsers()
@@ -116,10 +112,9 @@ function ChatHTTPS() {
         <div className="chat">
             <div className="chat-container">
                 <div className="chat-history">{
-                    wiadomosci.map((data, index) => {
+                    wiadomosci.sort((a, b) => a.date - b.date).map((data, index) => {
                         return (
                             <p key={index}>
-
                                 { data.from_id === cookies.UserId ?
                             <p> {cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ? 'Admin' : 'Client' } : {data.message} </p>
                             : <p>{cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ? 'Client' : 'Admin' } :  {data.message}</p>}
@@ -133,11 +128,11 @@ function ChatHTTPS() {
                     } )
                 }</div>
                 <input type="text" value={message} onChange={messageChange}/>
-                <button onClick={() => postMessage()}>WYSLIJ</button>
+                <button className="auth-modal-button" onClick={() => postMessage()}>WYSLIJ</button>
             </div>
             { cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ? <div>
                 {users.map((user) => {
-                    return (<button onClick={() => setSelectedUser(user.user_id)}>{user.first_name}</button>)
+                    return (<button className="auth-modal-button" onClick={() => setSelectedUser(user.user_id)}>{user.first_name}</button>)
                 })}
             </div> : null}
         </div>
