@@ -3,7 +3,6 @@ import axios from "axios";
 import { useFormik } from 'formik';
 function RamenInput({selected, dispatch, ramenList}) {
 
-
     const initialValues = {
         name: "",
         subscription: "",
@@ -17,7 +16,6 @@ function RamenInput({selected, dispatch, ramenList}) {
         ingredients: Yup.string().required('Required'),
         price: Yup.number().required('Required').min(0, 'Price must be greater than or equal to 0'),
     });
-
 
         const formik = useFormik({
             initialValues: initialValues,

@@ -1,11 +1,13 @@
-import {useEffect, useReducer, useState} from "react";
+import {useContext, useEffect, useReducer, useState} from "react";
 import Nav from "../components/Nav";
 import RamenList from "../components/Menu/RamenList";
 import Footer from "../components/Footer";
 import SushiList from "../components/Menu/SushiList";
 import Extras from "../components/Menu/Extras";
 import axios from "axios";
+import {SignUpContext} from "../components/Context/LoginProvider";
 function MenuPage() {
+
     const extras = [
         { name: 'Japanese Tea', price: '16zł' },
         { name: 'Japanese Beer', price: '12zł' },
@@ -14,7 +16,6 @@ function MenuPage() {
         { name: 'Japanese Rice', price: '4zł' },
         { name: 'Japanese Miso Soup', price: '8zł' }
     ]
-
 
     const initValues = {
         ramenClicked: true, sushiClicked:  false, extrasClicked: false, ramenList: [], sushiList: []
@@ -36,6 +37,7 @@ function MenuPage() {
         }
     }
     const [ state, dispatch ] = useReducer(reducer, initValues)
+    const { signUpClicked, setSignUpClicked } = useContext(SignUpContext);
 
     const getRamen =  async () => {
         try {
@@ -67,7 +69,7 @@ function MenuPage() {
 
     return (
         <>
-        <Nav/>
+        <Nav setSignUpClicked={setSignUpClicked}/>
         <div className="menu-page">
             <div className="choose-buttons">
                 <button className="ramen-choose choose" onClick={() => dispatch({type: 'RAMEN_CLICKED'})}>Rameny</button>

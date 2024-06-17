@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 import {useReducer, useState} from "react";
 import ChatHTTPS from "../components/chat/Chat";
 import axios from "axios";
-import ChatMQTT from "../components/chat/ChatMQTT";
+
 function Information() {
     const [ regex, setRegex ] = useState("")
     const [ users, setUsers] = useState([])
@@ -53,27 +53,28 @@ function Information() {
 
                     </div>
                 </div>
+
+
+            </div>
+            <div className="info">
                 <div className="info-godziny">
                     <h2>Godziny otwarcia</h2>
                     <div>Wtorek - Sobota: 13:00 - 21:00</div>
                     <div>Niedziela : 13:00 - 20:00</div>
                     <div>Poniedziałek: <i className="fa-solid fa-shop-lock"></i></div>
                 </div>
-                <div className="użytkownicy">
-                    <h2>SZUKAJ KLIENTA</h2>
-                    <input type="text" value={regex} onChange={handleChange}/>
-                    <i className="fa-solid fa-magnifying-glass" onClick={() => szukajWzorzec()}></i>
-                    {users.map((x) => <p>{x.first_name}</p>)}
-                </div>
-
+                {/*<div className="użytkownicy">*/}
+                {/*    <h2>SZUKAJ KLIENTA</h2>*/}
+                {/*    <input type="text" value={regex} onChange={handleChange}/>*/}
+                {/*    <i className="fa-solid fa-magnifying-glass" onClick={() => szukajWzorzec()}></i>*/}
+                {/*    {users.map((x) => <p>{x.first_name}</p>)}*/}
+                {/*</div>*/}
             </div>
-            <div className="chat-info">
-                <h1>CHAT DO RESTARUACJI</h1>
-                <button className="auth-modal-button" onClick={() => dispatch({type: 'http'})}>HTTP</button>
-                <button className="auth-modal-button" onClick={() => dispatch({type: 'mqtt'})}>MQTT</button>
-                {state.http ? <ChatHTTPS/> : null}
-                {state.mqtt ? <ChatMQTT/> : null}
-            </div>
+            {/*<div className="chat-info">*/}
+            {/*    <h1>CHAT DO RESTARUACJI</h1>*/}
+            {/*    <button className="auth-modal-button" onClick={() => dispatch({type: 'http'})}>HTTP</button>*/}
+            {/*    {state.http ? <ChatHTTPS/> : null}*/}
+            {/*</div>*/}
             <Footer/>
         </div>
     );

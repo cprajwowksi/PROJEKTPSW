@@ -1,9 +1,7 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
 import {useCookies} from "react-cookie";
 import axios from "axios";
-
 const UserContext = createContext();
-
 const UserProvider = ({ children }) => {
     const [cookie, setCookie, removeCookie] = useCookies(['user']);
     const userId = cookie.UserId

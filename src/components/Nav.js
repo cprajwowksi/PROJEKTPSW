@@ -4,56 +4,21 @@ import { useCookies } from "react-cookie";
 
 import { useUserContext } from "./UserProvider";
 import { useBasketContext } from "./Context/BasketProvider";
-import mqtt from "mqtt";
-import {useEffect, useState} from "react";
+import AuthModal from "./Authentication/AuthModal";
+import {useContext} from "react";
+import {SignUpContext} from "./Context/LoginProvider";
+import {useKeycloak} from "@react-keycloak/web";
 
-function Nav({ setSignUpClicked }) {
-
+function Nav() {
     const [cookies, setCookie, removeCookie ] = useCookies(['user'])
-    const [infoMessage, setInfoMessage] = useState(
-        localStorage.getItem('infoMessage') || ''
-    );
-
-    useEffect(() => {
-        const infoClient = mqtt.connect('ws://localhost:9000/mqtt');
-
-        infoClient.on('connect', () => {
-
-            infoClient.subscribe('infoClient', (err) => {
-                if (!err) {
-                    console.log('Subskrypcja udana!');
-                } else {
-                    console.error('Błąd podczas subskrybowania:', err);
-                }
-            });
-        });
-
-        infoClient.on('message', (topic, message) => {
-            const receivedMessage = message.toString();
-            setInfoMessage(receivedMessage);
-            localStorage.setItem('infoMessage', receivedMessage);
-        });
-
-        return () => {
-            infoClient.end();
-        };
-    }, []);
-
+    const { signUpClicked, setSignUpClicked } = useContext(SignUpContext);
     const logout = async () => {
-
-        const client = mqtt.connect("ws://localhost:9000/mqtt");
-
-        client.on("connect", async () => {
-            await client.publishAsync("logout", Math.round(Math.random() * 5 + 20, 2).toString());
-            navigate('/')
-            window.location.reload();
-            client.end()
-        })
-
+        navigate('/')
+        window.location.reload();
         removeCookie('UserId', cookies.UserId)
         removeCookie('AuthToken', cookies.AuthToken)
-
     }
+    const { keycloak, initialized } = useKeycloak();
 
     const { user } = useUserContext();
 
@@ -62,14 +27,33 @@ function Nav({ setSignUpClicked }) {
     const navigate = useNavigate()
 
 
-
-
     return (
+        <>
         <nav>
-            <p className="mqtt-count">Ilosc zalogowanych użytkownikow to: {infoMessage}</p>
-            {!user ? <button onClick={() => setSignUpClicked(true)}> ZALOGUJ </button> :
-                    <button onClick={() => navigate('/profile')}>{user.first_name}</button>
-            }
+            {/*{!user ? <button onClick={() => setSignUpClicked(true)}> ZALOGUJ </button> :*/}
+            {/*        <button onClick={() => navigate('/profile')}>{user.first_name}</button>*/}
+            {/*}*/}
+
+                    {!keycloak.authenticated && (
+                        <button
+                            type="button"
+                            className="login"
+                            onClick={() => keycloak.login()}
+                        >
+                            Login
+                        </button>
+                    )}
+
+                    {!!keycloak.authenticated && (
+                        <button
+                            type="button"
+                            className="login"
+                            onClick={() => keycloak.logout()}
+                        >
+                            Logout ({keycloak.tokenParsed.preferred_username})
+                        </button>
+                    )}
+
             {user && <button onClick={() => navigate('/menu')}>MENU</button>}
             <a href="https://www.facebook.com/profile.php?id=100086246228234"><i className="fa-brands fa-square-facebook"></i></a>
             <a href="https://www.instagram.com/panda_slupsk/"><i className="fa-brands fa-instagram"></i></a>
@@ -81,6 +65,8 @@ function Nav({ setSignUpClicked }) {
             <button onClick={() => navigate('/info')}>INFO</button>
             { user ? <button onClick={logout}>WYLOGUJ</button>  : null}
         </nav>
+            { signUpClicked ? <AuthModal setSignUpClicked={setSignUpClicked}/> : null}
+        </>
     );
 }
 

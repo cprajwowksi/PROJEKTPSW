@@ -1,16 +1,17 @@
 import axios from 'axios';
-import {useEffect, useState , useRef} from 'react';
+import {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import mqtt from "mqtt";
+import { useKeycloak } from "@react-keycloak/web";
 
 const AuthModal = ({ setSignUpClicked }) => {
     const [cookie, setCookie] = useCookies(['user']);
     const [isSignUp, setIsSignUp] = useState(false)
-
+    const [error, setError] = useState(null)
     const navigate = useNavigate();
+    const { keycloak, initialized } = useKeycloak();
 
     const handleClick = () => {
         setSignUpClicked(false)
@@ -37,32 +38,28 @@ const AuthModal = ({ setSignUpClicked }) => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
-
                 const response = await axios.post(`http://localhost:8000/${isSignUp ? 'signup' : 'login'}`, {
                     email: values.email,
                     password: values.password,
                 });
-
                 const success = response.status === 201;
-
                 setCookie('Email', response.data.email);
                 setCookie('UserId', response.data.userId);
                 setCookie('AuthToken', response.data.token);
-
                 if (success && isSignUp) navigate('/onboarding');
-
-                const client = mqtt.connect("ws://localhost:9000/mqtt");
-
+                if (success && !isSignUp) window.location.reload();
                 const userId = response.data.userId;
-
                 const jsonData = JSON.stringify({ userId });
-                console.log('logujemy logujemy')
-                client.on("connect", async () => {
-                     await client.publishAsync("login", jsonData);
-                     window.location.reload();
-                })
             } catch (error) {
-                console.log(error);
+                if (error.response) {
+                    if (error.response.status === 404) {
+                        setError('Podano zły e-mail lub hasło');
+                    } else {
+                        setError('Wystąpił problem podczas przetwarzania żądania.');
+                    }
+                } else {
+                    setError('Nie można połączyć się z serwerem.');
+                }
             }
         },
     });
@@ -92,10 +89,37 @@ const AuthModal = ({ setSignUpClicked }) => {
 
                 <input className="auth-modal-button" type="submit" />
             </form>
+            <p>
+                {error}
+            </p>
             <hr />
             <div className="footer">
                 <div>{!isSignUp ? <p>Nie masz konta?</p> : <p>Masz konto?</p>}</div>
                 <button className="auth-modal-second-button" onClick={() => setIsSignUp(!isSignUp)}> {!isSignUp ? <>Zarejestruj się</> : <>Zaloguj się</>}</button>
+            </div>
+                <p>Zaloguj się za pomocą Keycloak</p>
+            <div className="keycloak-auth">
+                <div>
+                    {!keycloak.authenticated && (
+                        <button
+                            type="button"
+                            className="add-post"
+                            onClick={() => keycloak.login()}
+                        >
+                            Login
+                        </button>
+                    )}
+
+                    {!!keycloak.authenticated && (
+                        <button
+                            type="button"
+                            className="add-post"
+                            onClick={() => keycloak.logout()}
+                        >
+                            Logout ({keycloak.tokenParsed.preferred_username})
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

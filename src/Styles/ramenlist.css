@@ -75,7 +75,7 @@
     padding-left:2em;
     font-size: 1.25em;
     letter-spacing: 0.1em;
-    transition: background-color 0.3s ease-in-out; /* Dodano płynne przejście */
+    transition: background-color 0.3s ease-in-out;
 
 }
 
@@ -91,17 +91,33 @@
     color: #7c1a1a;
 }
 
+.ramen-input {
+    border-radius: 1em;
+    background-color: white;
+    color:black;
+    padding:3em;
+    border: 2px solid white;
+}
+
+.ramen-input h1 {
+    text-align: center;
+    text-transform: uppercase;
+}
 .ramen-input form{
     display: flex;
     flex-direction: column;
     text-transform: uppercase;
-
+    text-align: center;
 }
 .ramen-input form input{
-   padding: 1em;
+    padding: 1em;
     font-size: 1em;
     margin:0.5em;
     width: 50vh;
+    background-color: black;
+    border: 1px solid white;
+    color: white;
+    border-radius: 1em;
 }
 
 .ramen-input form label{

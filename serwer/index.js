@@ -53,13 +53,15 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
     const client = new MongoClient(uri)
     const { email, password } = req.body
-
     try {
         await client.connect()
         const database = client.db('Panda')
         const users = database.collection('users')
         const user = await users.findOne({email})
-
+        if (!user) {
+            res.status(404).send('Podano zly email lub haslo')
+            return
+        }
         const correctPassword = await bcrypt.compare(password, user.hashed_password)
         if (user && correctPassword) {
             const token = jwt.sign(
@@ -68,13 +70,11 @@ app.post('/login', async (req, res) => {
                 {expiresIn: 60 * 24})
             return res.status(201).json({token, userId: user.user_id, email})
         }
-        return res.status(400).send('Invalid')
+        return res.status(404).send('Podano zly email lub haslo')
 
     } catch (err) {
         console.log(err)
     }
-
-
 })
 app.get('/users',async (req, res) => {
     const client = new MongoClient(uri)
@@ -85,8 +85,9 @@ app.get('/users',async (req, res) => {
         const users = database.collection('users')
         const returnedUsers = await users.find().toArray()
         res.send(returnedUsers)
-
-    } finally {
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
 })
@@ -101,7 +102,9 @@ app.get('/user', async (req, res) => {
         const query = { user_id: userId }
         const user = await users.findOne(query)
         res.send(user)
-    } finally {
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
 })
@@ -116,34 +119,48 @@ app.get('/users/search', async (req, res) => {
         const regexQuery = { first_name: { $regex: regex, $options: 'i' } };
         const user = await users.find(regexQuery).toArray()
         res.send(user)
-    } finally {
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
 });
+
 app.delete('/user', async (req, res) => {
-    const client = new MongoClient(uri)
-    const userId = req.query.userId
-    try{
-        await client.connect()
-        const database = client.db('Panda')
-        const users = database.collection('users')
-        const query = { user_id: userId }
-        const user = await users.deleteOne(query)
-        res.send(user)
+    const client = new MongoClient(uri);
+    const userId = req.query.userId;
+
+    try {
+        await client.connect();
+        const database = client.db('Panda');
+        const users = database.collection('users');
+
+        const result = await users.deleteOne({ user_id: userId });
+        if (result.deletedCount === 1) {
+            res.status(200).send('Użytkownik został pomyślnie usunięty');
+        } else {
+            res.status(404).send('Nie udało się usunąć użytkownika');
+        }
+    } catch (error) {
+        console.error('Błąd podczas operacji na bazie danych:', error);
+        res.status(500).send('Wystąpił błąd podczas usuwania użytkownika');
     } finally {
-        await client.close()
+        await client.close();
     }
-})
+});
 app.put('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const formData = req.body.values
     try {
-
         await client.connect()
         const database = client.db('Panda')
         const users = database.collection('users')
-
         const query = { user_id: formData.user_id }
+        const found = await users.findOne(query);
+        if (!found) {
+            res.status(404).send('Nie znaleziono użytkownika');
+            return;
+        }
         const updateDocument = {
             $set: {
                 first_name: formData.first_name,
@@ -158,23 +175,32 @@ app.put('/user', async (req, res) => {
                 }
             }
         }
-        const insertedUser = await users.updateOne(query, updateDocument)
-        res.send(insertedUser)
+        const result = await users.updateOne(query, updateDocument);
+        if (result.modifiedCount === 1) {
+            res.status(200).send('Dane użytkownika zostały pomyślnie zaktualizowane');
+        } else {
+            res.status(500).send('Wystąpił problem podczas aktualizacji danych użytkownika');
+        }
+    } catch (error) {
+        console.error('Błąd podczas operacji na bazie danych:', error);
+        res.status(500).send('Wystąpił błąd podczas aktualizacji danych użytkownika');
     } finally {
-        await client.close()
+        await client.close();
     }
 })
-
 app.patch('/user', async (req, res) => {
     const client = new MongoClient(uri)
     const formData = req.body.values
     try {
-
         await client.connect()
         const database = client.db('Panda')
         const users = database.collection('users')
-
         const query = { user_id: formData.user_id }
+        const found = await users.findOne(query);
+        if (!found) {
+            res.status(404).send('Nie znaleziono użytkownika');
+            return;
+        }
         const updateDocument = {
             $set: {
                 first_name: formData.first_name,
@@ -189,10 +215,17 @@ app.patch('/user', async (req, res) => {
                 }
             }
         }
-        const modifiedUser = await users.updateOne(query, updateDocument)
-        res.send(modifiedUser)
+        const result = await users.updateOne(query, updateDocument);
+        if (result.modifiedCount === 1) {
+            res.status(200).send('Dane użytkownika zostały pomyślnie zaktualizowane');
+        } else {
+            res.status(500).send('Wystąpił problem podczas aktualizacji danych użytkownika');
+        }
+    } catch (error) {
+        console.error('Błąd podczas operacji na bazie danych:', error);
+        res.status(500).send('Wystąpił błąd podczas aktualizacji danych użytkownika');
     } finally {
-        await client.close()
+        await client.close();
     }
 })
 
@@ -207,7 +240,9 @@ app.get('/opinie', async (req, res) => {
         const query = { _id: new ObjectId(foodId) };
         const opinie = await users.findOne(query, { projection: { "_id": 0, "opinie": 1 } });
         res.send(opinie.opinie)
-    } finally {
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
     }
@@ -223,12 +258,15 @@ app.post('/opinia', async (req, res) => {
             const foods = database.collection('food')
             const opiniaBezFoodId = { ...formattedOpinia };
             delete opiniaBezFoodId.foodId;
-            const result = await foods.updateOne(
+            await foods.updateOne(
                 { _id: new ObjectId(formattedOpinia.foodId) },
                 { $push: { opinie: opiniaBezFoodId } }
-            );            // res.send(opinie.opinie)
+            );
+            res.status(200).send('Wstawiono')
 
-        } finally {
+        } catch {
+            res.status(400).send('Blad przy wstawianiu')
+        }finally {
             await client.close()
         }
     }
@@ -244,13 +282,14 @@ app.delete('/opinia', async (req, res) => {
             const foods = database.collection('food')
             const opiniaBezFoodId = { ...formattedOpinia };
             delete opiniaBezFoodId.foodId;
-            const result = await foods.updateOne(
+            await foods.updateOne(
                 { _id: new ObjectId(formattedOpinia.foodId) },
                 { $pull: { opinie: opiniaBezFoodId } }
-            );            // res.send(opinie.opinie)
-
-            console.log(result)
-        } finally {
+            );
+            res.status(200).send("Usunięto")
+        } catch {
+            res.status(404).send("Nie ma takiej opinii")
+        }finally {
             await client.close()
         }
     }
@@ -269,19 +308,18 @@ app.put('/opinia', async (req, res) => {
             delete opiniaBezFoodId.foodId;
             const opinia2 = { ...drugaOpinia}
             delete opinia2.foodId;
-
             await foods.updateOne(
                 { _id: new ObjectId(formattedOpinia.foodId) },
                 { $pull: { opinie: opiniaBezFoodId } }
             );
-
-            const dodaj = await foods.updateOne(
+            await foods.updateOne(
                 { _id: new ObjectId(formattedOpinia.foodId) },
                 { $push: { opinie: opinia2 } }
             );
-            // res.send(opinie.opinie)
-
-        } finally {
+            res.send('Zmieniono')
+        } catch {
+            res.status(400).send('Problem z polaczeniem.')
+        }finally {
             await client.close()
         }
     }
@@ -297,10 +335,13 @@ app.get('/food', async (req, res) => {
         const opinie = await foods.find(query).toArray()
 
         res.send(opinie)
-    } finally {
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
 })
+
 app.delete('/food', async (req, res) => {
     const client = new MongoClient(uri)
     const foodId = req.body._id
@@ -309,9 +350,14 @@ app.delete('/food', async (req, res) => {
         const database = client.db('Panda')
         const foods = database.collection('food')
         const query = { _id: new ObjectId(foodId)}
-        const opinie = await foods.deleteOne(query)
-
-        res.send(opinie)
+        const result = await foods.deleteOne(query)
+        if (result.deletedCount === 1) {
+            res.status(200).send('Potrawa została pomyślnie usunięta');
+        } else {
+            res.status(404).send('Nie udało się usunąć potrawy');
+        }
+    } catch {
+        res.status(500).send('Problem przy usuwaniu potrawy')
     } finally {
         await client.close()
     }
@@ -324,6 +370,7 @@ app.post('/food', async(req ,res) => {
         const database = client.db('Panda')
         const foods = database.collection('food')
         const instertedFood = await foods.insertOne(food)
+
         res.send(instertedFood)
 
     } finally {
@@ -333,13 +380,19 @@ app.post('/food', async(req ,res) => {
 app.post('/zamowienie', async (req, res) => {
     const client = new MongoClient(uri)
     const zamowienie = req.body.data
-    try{
+    try {
         await client.connect()
         const database = client.db('Panda')
         const zamowienia = database.collection('Zamowienia')
-        const insertedZamowienie = await zamowienia.insertOne(zamowienie)
-        res.send(insertedZamowienie)
-
+        const result = await zamowienia.insertOne(zamowienie)
+        if (result.insertedCount === 1) {
+            res.status(201).send('Zamowienie zostało pomyślnie dodane.')
+        } else {
+            res.status(400).send('Nie udało się dodać zamówienia.')
+        }
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
     } finally {
         await client.close()
     }
@@ -358,10 +411,11 @@ app.get('/messages',async (req, res) => {
                 from_id: userId,
                 to_id:toId
             }
-
             const foundMessages = await messages.find(query).toArray()
             res.send(foundMessages)
-        } finally {
+        } catch {
+            res.status(400).send('Nie udalo sie polaczyc')
+        }finally {
             await client.close()
         }
     }
@@ -374,10 +428,15 @@ app.post('/messages', async(req ,res) => {
         await client.connect()
         const database = client.db('Panda')
         const messages = database.collection('messages')
-        const insertedmessage = await messages.insertOne(message)
-        res.send(insertedmessage)
-
-    } finally {
+        const result = await messages.insertOne(message)
+        if (result.insertedCount === 1) {
+            res.status(201).send('Zamowienie zostało pomyślnie dodane.')
+        } else {
+            res.status(400).send('Nie udało się dodać zamówienia.')
+        }
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close()
     }
 })
@@ -385,15 +444,19 @@ app.post('/messages', async(req ,res) => {
 app.delete('/message', async (req, res) => {
     const client = new MongoClient(uri);
     const messageId = req.body.message._id;
-
     try {
         await client.connect();
         const database = client.db('Panda');
         const messages = database.collection('messages');
-        const deletedMessage = await messages.deleteOne({ _id: new ObjectId(messageId) });
-
-        res.send(deletedMessage);
-    } finally {
+        const result = await messages.deleteOne({ _id: new ObjectId(messageId) });
+        if (result.deletedCount === 1) {
+            res.status(201).send('Zamowienie zostało pomyślnie dodane.')
+        } else {
+            res.status(400).send('Nie udało się dodać zamówienia.')
+        }
+    } catch {
+        res.status(400).send('Nie udalo sie polaczyc')
+    }finally {
         await client.close();
     }
 });
@@ -407,9 +470,15 @@ app.put('/message', async (req, res) => {
         const database = client.db('Panda');
         const messages = database.collection('messages');
         await messages.deleteOne({ _id: new ObjectId(messageId) });
-        const edited = await messages.insertOne(editedMessage)
-        res.send(edited);
-    } finally {
+        const result = await messages.insertOne(editedMessage)
+        if (result.insertedCount === 1) {
+            res.status(201).send('Zamowienie zostało pomyślnie zmienione.')
+        } else {
+            res.status(400).send('Nie udało się zmienić zamówienia.')
+        }
+    } catch {
+        res.status(400).send('Nie udało sie połączyć')
+    }finally {
         await client.close();
     }
 });

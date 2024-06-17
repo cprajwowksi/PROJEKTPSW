@@ -49,3 +49,23 @@
     color: #737373;
     padding:0.5em;
 }
+
+button.add-post{
+    height: 3em;
+    border-radius: 1em;
+    margin:0.25em;
+    padding-right:2em;
+    padding-left:2em;
+    color:white;
+    font-size: 1.25em;
+    letter-spacing: 0.1em;
+    background-color: black;
+    border: 1px solid white;
+}
+
+button.add-post:hover{
+    transition: background-color 0.3s ease-in-out;
+    background-color: white;
+    cursor:pointer;
+    color: black;
+}

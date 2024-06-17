@@ -2,7 +2,7 @@
 
 .auth-modal {
     font-family: 'Oswald', sans-serif;
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 200px;
@@ -12,6 +12,7 @@
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
     padding: 40px;
+    z-index: 10000;
 }
 
 .auth-modal .closeIcon{

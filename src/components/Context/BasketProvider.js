@@ -15,11 +15,9 @@ const basketReducer = (state, action) => {
             return state;
     }
 };
-
 const BasketProvider = ({ children }) => {
     // Use useReducer instead of useState
     const [state, dispatch] = useReducer(basketReducer, { basket: [] });
-
     const setBasketContext = (userData) => {
         // Dispatch the action to set the basket
         dispatch({ type: 'SET_BASKET', payload: userData });
@@ -38,7 +36,6 @@ const BasketProvider = ({ children }) => {
         </BasketContext.Provider>
     );
 };
-
 const useBasketContext = () => {
     const context = useContext(BasketContext);
     if (!context) {
