@@ -8,7 +8,6 @@ import axios from "axios";
 import {SignUpContext} from "../components/Context/LoginProvider";
 import {useKeycloak} from "@react-keycloak/web";
 function MenuPage() {
-
     const extras = [
         { name: 'Japanese Tea', price: '16zł' },
         { name: 'Japanese Beer', price: '12zł' },
@@ -17,7 +16,6 @@ function MenuPage() {
         { name: 'Japanese Rice', price: '4zł' },
         { name: 'Japanese Miso Soup', price: '8zł' }
     ]
-
     const initValues = {
         ramenClicked: true, sushiClicked:  false, extrasClicked: false, ramenList: [], sushiList: []
     }
@@ -40,24 +38,12 @@ function MenuPage() {
     const [ state, dispatch ] = useReducer(reducer, initValues)
     const { signUpClicked, setSignUpClicked } = useContext(SignUpContext);
 
-    // const getRamen =  async () => {
-    //     try {
-    //         const response = await axios.get(`http://localhost:8000/food`, {
-    //             params: { type: 'ramen' }
-    //         })
-    //         await dispatch({type: 'SET_RAMEN_LIST', payload: response.data})
-    //         console.log(response.data)
-    //     } catch(err) {
-    //         console.log(err)
-    //     }
-    // }
-
     const getRamen = async () => {
         const token = keycloak.token
         console.log(token)
         try {
             const response = await axios.get('http://localhost:8000/food', {
-                params: { type: 'ramen' },
+                params: { type: 'ramen'},
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -69,16 +55,21 @@ function MenuPage() {
         }
     };
     const getSushi =  async () => {
+        const token = keycloak.token
         try {
-            const response = await axios.get(`http://localhost:8000/food`, {
-                params: { type: 'sushi' }
-            })
+            const response = await axios.get('http://localhost:8000/food', {
+                params: { type: 'sushi' },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             await dispatch({type: 'SET_SUSHI_LIST', payload: response.data})
             console.log(response.data)
         } catch(err) {
             console.log(err)
         }
     }
+
     useEffect(() => {
         getRamen()
         getSushi()
@@ -101,7 +92,6 @@ function MenuPage() {
             {state.sushiClicked ? <SushiList sushiLists={state.sushiList} dispatch={dispatch}/> : null }
             { state.extrasClicked ? <Extras extras={extras}/> : null }
             {hasRole && isLoggedIn ? <button className="choose">Edytuj karte</button> : null}
-
         </div>
 
         </>

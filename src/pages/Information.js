@@ -3,32 +3,17 @@ import Footer from "../components/Footer";
 import {useReducer, useState} from "react";
 import ChatHTTPS from "../components/chat/Chat";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {useKeycloak} from "@react-keycloak/web";
 
 function Information() {
-    const [ regex, setRegex ] = useState("")
-    const [ users, setUsers] = useState([])
-    const handleChange = (e) => {
-        setRegex(e.target.value)
-        console.log(regex)
-    }
 
-    const szukajWzorzec = async () => {
-        try{
-            const response = await axios.get(`http://localhost:8000/users/search?pattern=${regex}`);
-            setUsers(response.data)
-        } catch(err) {
-            console.log(err)
-        }
-    }
-    const reducer = (state, action) => {
-        switch (action.type){
-            case 'http':
-                return { ...state, http: true, mqtt: false}
-            case 'mqtt':
-                return { ...state, http: false, mqtt: true}
-        }
-    }
-    const [state, dispatch] = useReducer(reducer, { http: false, mqtt: false})
+    let navigate = useNavigate()
+
+    const { keycloak } = useKeycloak();
+    const isLoggedIn = keycloak.authenticated;
+    const hasRole = keycloak.hasRealmRole("admin")
+
     return (
         <div className="info-page">
             <Nav/>
@@ -50,11 +35,8 @@ function Information() {
                         <div className="info-phone">
                             <i className="fa-solid fa-phone"></i> 787 787 926
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
             <div className="info">
                 <div className="info-godziny">
@@ -63,18 +45,10 @@ function Information() {
                     <div>Niedziela : 13:00 - 20:00</div>
                     <div>Poniedziałek: <i className="fa-solid fa-shop-lock"></i></div>
                 </div>
-                {/*<div className="użytkownicy">*/}
-                {/*    <h2>SZUKAJ KLIENTA</h2>*/}
-                {/*    <input type="text" value={regex} onChange={handleChange}/>*/}
-                {/*    <i className="fa-solid fa-magnifying-glass" onClick={() => szukajWzorzec()}></i>*/}
-                {/*    {users.map((x) => <p>{x.first_name}</p>)}*/}
-                {/*</div>*/}
             </div>
-            {/*<div className="chat-info">*/}
-            {/*    <h1>CHAT DO RESTARUACJI</h1>*/}
-            {/*    <button className="auth-modal-button" onClick={() => dispatch({type: 'http'})}>HTTP</button>*/}
-            {/*    {state.http ? <ChatHTTPS/> : null}*/}
-            {/*</div>*/}
+            {hasRole && isLoggedIn ? <div className="obudowa-admin">
+                <button className="admin" onClick={() => navigate('/admin')}>STRONA ADMINA</button>
+            </div> : null}
             <Footer/>
         </div>
     );

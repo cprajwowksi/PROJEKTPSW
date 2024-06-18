@@ -1,42 +1,70 @@
 import Nav from "../components/Nav";
+import axios from "axios";
+import {useKeycloak} from "@react-keycloak/web";
+import {useEffect, useState} from "react";
+import Zamowienie from "../components/Basket/Zamowienie";
+import zamowienie from "../components/Basket/Zamowienie";
 function AdminPage (){
+    const [zamowienia, setZamowienia] = useState([])
+    const { keycloak } = useKeycloak();
+    const getZamowienia = async () => {
+        const token = keycloak.token
 
+        try {
+            const response = await axios.get('http://localhost:8000/zamowienie', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setZamowienia(response.data)
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
-    return (
-      < >
-        <Nav/>
-        <div className='admin-page'>
+    useEffect(() => {
+        getZamowienia()
+    }, []);
+
+    useEffect(() => {
+        console.log(zamowienia)
+    }, [zamowienia])
+    const slownik_typow = {0: "przychodzace", 1: "przyjete", 2:"wykonane",3:"odrzucone"}
+    const renderZamowienia = (type) => {
+        return (
             <div>
-                <h1>Zamowienia</h1>
-                <div className="admin-zamowienia">
-                    <div>
-                        <h2>Przychodzące</h2>
-                        <div className="zamowienie zamowienie-przychodzace">
-
-                        </div>
-                    </div>
-                    <div>
-                        <h2>Przyjęte</h2>
-                        <div className="zamowienie zamowienie-przyjete">
-
-                        </div>
-                    </div>
-                    <div>
-                        <h2>Wykonane</h2>
-                        <div className="zamowienie zamowienie-wykonane">
-
-                        </div>
-                    </div>
-                    <div>
-                        <h2>Odrzucone</h2>
-                        <div className="zamowienie zamowienie-odrzucone">
-
-                        </div>
-                    </div>
+                <h2>{slownik_typow[type]}</h2>
+                <div className={`zamowienie zamowienie-${slownik_typow[type]}`}>
+                    {zamowienia.filter(zamowienie => zamowienie.type === type).map(zamowienie => (
+                        <Zamowienie
+                            key={zamowienie._id}
+                            id={zamowienie._id}
+                            username={zamowienie.username}
+                            cena={zamowienie.cena}
+                            basket={zamowienie.basket}
+                            zamowienia={zamowienia}
+                            setZamowienia={setZamowienia}
+                        />
+                    ))}
                 </div>
             </div>
-        </div>
-          </>
+        );
+    };
+    return (
+      <>
+        <Nav/>
+          <div className='admin-page'>
+              <div>
+                  <h1>Zamówienia</h1>
+                  <div className="admin-zamowienia">
+                      {renderZamowienia(0)}
+                      {renderZamowienia(1)}
+                      {renderZamowienia(2)}
+                      {renderZamowienia(3)}
+                  </div>
+              </div>
+          </div>
+      </>
     )
 }
 

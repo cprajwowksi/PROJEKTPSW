@@ -2,19 +2,14 @@ const PORT = 8000
 
 const express = require('express')
 const { MongoClient, ObjectId  } = require('mongodb')
-const  {v4: uuidv4 } = require('uuid')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 const cors = require('cors')
 const app = express()
-
 let session = require('express-session');
 let { NodeAdapter} = require("ef-keycloak-connect");
 const config = require(`./keycloak.json`);
 const keycloak = new NodeAdapter(config)
 
-console.log(config)
-app.use(cors({origin: "http://localhost:3000"}));
+app.use(cors())
 
 app.use(session({
     secret: 'secret1',
@@ -108,141 +103,6 @@ app.get('/users', async (req, res) => {
     }
 })
 
-// app.get('/user', async (req, res) => {
-//     const client = new MongoClient(uri)
-//     const userId = req.query.userId
-//     try{
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const query = { user_id: userId }
-//         const user = await users.findOne(query)
-//         res.send(user)
-//     } catch {
-//         res.status(400).send('Nie udalo sie polaczyc')
-//     }finally {
-//         await client.close()
-//     }
-// })
-// app.get('/users/search', async (req, res) => {
-//     const client = new MongoClient(uri)
-//     const regex = req.query.pattern;
-//     try{
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const regexQuery = { first_name: { $regex: regex, $options: 'i' } };
-//         const user = await users.find(regexQuery).toArray()
-//         res.send(user)
-//     } catch {
-//         res.status(400).send('Nie udalo sie polaczyc')
-//     }finally {
-//         await client.close()
-//     }
-// });
-// app.delete('/user', async (req, res) => {
-//     const client = new MongoClient(uri);
-//     const userId = req.query.userId;
-//
-//     try {
-//         await client.connect();
-//         const database = client.db('Panda');
-//         const users = database.collection('users');
-//
-//         const result = await users.deleteOne({ user_id: userId });
-//         if (result.deletedCount === 1) {
-//             res.status(200).send('Użytkownik został pomyślnie usunięty');
-//         } else {
-//             res.status(404).send('Nie udało się usunąć użytkownika');
-//         }
-//     } catch (error) {
-//         console.error('Błąd podczas operacji na bazie danych:', error);
-//         res.status(500).send('Wystąpił błąd podczas usuwania użytkownika');
-//     } finally {
-//         await client.close();
-//     }
-// });
-// app.put('/user', async (req, res) => {
-//     const client = new MongoClient(uri)
-//     const formData = req.body.values
-//     try {
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const query = { user_id: formData.user_id }
-//         const found = await users.findOne(query);
-//         if (!found) {
-//             res.status(404).send('Nie znaleziono użytkownika');
-//             return;
-//         }
-//         const updateDocument = {
-//             $set: {
-//                 first_name: formData.first_name,
-//                 dob_day: formData.dob_day,
-//                 dob_month: formData.dob_month,
-//                 dob_year: formData.dob_year,
-//                 gender_identity: formData.gender_identity,
-//                 adres: {
-//                     ulica: formData.ulica,
-//                     miasto: formData.miasto,
-//                     numer: formData.numer
-//                 }
-//             }
-//         }
-//         const result = await users.updateOne(query, updateDocument);
-//         if (result.modifiedCount === 1) {
-//             res.status(200).send('Dane użytkownika zostały pomyślnie zaktualizowane');
-//         } else {
-//             res.status(500).send('Wystąpił problem podczas aktualizacji danych użytkownika');
-//         }
-//     } catch (error) {
-//         console.error('Błąd podczas operacji na bazie danych:', error);
-//         res.status(500).send('Wystąpił błąd podczas aktualizacji danych użytkownika');
-//     } finally {
-//         await client.close();
-//     }
-// })
-// app.patch('/user', async (req, res) => {
-//     const client = new MongoClient(uri)
-//     const formData = req.body.values
-//     try {
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const query = { user_id: formData.user_id }
-//         const found = await users.findOne(query);
-//         if (!found) {
-//             res.status(404).send('Nie znaleziono użytkownika');
-//             return;
-//         }
-//         const updateDocument = {
-//             $set: {
-//                 first_name: formData.first_name,
-//                 dob_day: formData.dob_day,
-//                 dob_month: formData.dob_month,
-//                 dob_year: formData.dob_year,
-//                 gender_identity: formData.gender_identity,
-//                 adres: {
-//                     ulica: formData.ulica,
-//                     miasto: formData.miasto,
-//                     numer: formData.numer
-//                 }
-//             }
-//         }
-//         const result = await users.updateOne(query, updateDocument);
-//         if (result.modifiedCount === 1) {
-//             res.status(200).send('Dane użytkownika zostały pomyślnie zaktualizowane');
-//         } else {
-//             res.status(500).send('Wystąpił problem podczas aktualizacji danych użytkownika');
-//         }
-//     } catch (error) {
-//         console.error('Błąd podczas operacji na bazie danych:', error);
-//         res.status(500).send('Wystąpił błąd podczas aktualizacji danych użytkownika');
-//     } finally {
-//         await client.close();
-//     }
-// })
-
 app.get('/opinie', async (req, res) => {
     const client = new MongoClient(uri)
     const foodId = req.query.foodId
@@ -262,7 +122,7 @@ app.get('/opinie', async (req, res) => {
     }
 })
 
-app.post('/opinia', async (req, res) => {
+app.post('/opinia', keycloak.protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const formattedOpinia = req.body.params.formattedOpinia
     if (formattedOpinia !== undefined){
@@ -309,7 +169,7 @@ app.delete('/opinia', async (req, res) => {
     }
 })
 
-app.put('/opinia', async (req, res) => {
+app.put('/opinia', keycloak.protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const formattedOpinia = req.body.data.formattedOpinia
     const drugaOpinia = req.body.data.drugaOpinia
@@ -338,7 +198,7 @@ app.put('/opinia', async (req, res) => {
         }
     }
 })
-app.get('/food', keycloak.protect('realm:admin'), async (req, res) => {
+app.get('/food', async (req, res) => {
     console.log('przyznano')
     const client = new MongoClient(uri)
     const type = req.query.type
@@ -376,7 +236,7 @@ app.delete('/food', keycloak.protect('realm:admin'), async (req, res) => {
         await client.close()
     }
 })
-app.post('/food', keycloak.protect(), async(req ,res) => {
+app.post('/food', keycloak.protect('realm:admin'), async(req ,res) => {
     const client = new MongoClient(uri)
     const food = req.body.data.formattedValues
     try {
@@ -390,18 +250,19 @@ app.post('/food', keycloak.protect(), async(req ,res) => {
     }
 })
 
-app.post('/zamowienie', async (req, res) => {
+app.post('/zamowienie', keycloak.protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const zamowienie = req.body.data
+    zamowienie.type = 0
     try {
         await client.connect()
         const database = client.db('Panda')
         const zamowienia = database.collection('Zamowienia')
         const result = await zamowienia.insertOne(zamowienie)
-        if (result.insertedCount === 1) {
-            res.status(201).send('Zamowienie zostało pomyślnie dodane.')
+        if (result.acknowledged && result.insertedId) {
+            res.status(201).send('Zamówienie zostało pomyślnie dodane.');
         } else {
-            res.status(400).send('Nie udało się dodać zamówienia.')
+            res.status(400).send('Nie udało się dodać zamówienia.');
         }
     } catch (error) {
         console.error('Error during insertion:', error)
@@ -411,91 +272,69 @@ app.post('/zamowienie', async (req, res) => {
     }
 })
 
-// app.get('/messages',async (req, res) => {
-//         const client = new MongoClient(uri)
-//         const userId = req.query.userId
-//         const toId = req.query.toId
-//         try{
-//             await client.connect()
-//             const database = client.db('Panda')
-//             const messages = database.collection('messages')
-//
-//             const query = {
-//                 from_id: userId,
-//                 to_id:toId
-//             }
-//             const foundMessages = await messages.find(query).toArray()
-//             res.send(foundMessages)
-//         } catch {
-//             res.status(400).send('Nie udalo sie polaczyc')
-//         }finally {
-//             await client.close()
-//         }
-//     }
-// )
-//
-// app.post('/messages', async(req ,res) => {
-//     const client = new MongoClient(uri)
-//     const message = req.body.data.message
-//     try {
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const messages = database.collection('messages')
-//         const result = await messages.insertOne(message)
-//         if (result.insertedCount === 1) {
-//             res.status(201).send('Zamowienie zostało pomyślnie dodane.')
-//         } else {
-//             res.status(400).send('Nie udało się dodać zamówienia.')
-//         }
-//     } catch {
-//         res.status(400).send('Nie udalo sie polaczyc')
-//     }finally {
-//         await client.close()
-//     }
-// })
-//
-// app.delete('/message', async (req, res) => {
-//     const client = new MongoClient(uri);
-//     const messageId = req.body.message._id;
-//     try {
-//         await client.connect();
-//         const database = client.db('Panda');
-//         const messages = database.collection('messages');
-//         const result = await messages.deleteOne({ _id: new ObjectId(messageId) });
-//         if (result.deletedCount === 1) {
-//             res.status(201).send('Zamowienie zostało pomyślnie dodane.')
-//         } else {
-//             res.status(400).send('Nie udało się dodać zamówienia.')
-//         }
-//     } catch {
-//         res.status(400).send('Nie udalo sie polaczyc')
-//     }finally {
-//         await client.close();
-//     }
-// });
-//
-// app.put('/message', async (req, res) => {
-//     const client = new MongoClient(uri);
-//     const editedMessage = req.body.data.edited
-//     const messageId = req.body.data.message._id;
-//     try {
-//         await client.connect();
-//         const database = client.db('Panda');
-//         const messages = database.collection('messages');
-//         await messages.deleteOne({ _id: new ObjectId(messageId) });
-//         const result = await messages.insertOne(editedMessage)
-//         if (result.insertedCount === 1) {
-//             res.status(201).send('Zamowienie zostało pomyślnie zmienione.')
-//         } else {
-//             res.status(400).send('Nie udało się zmienić zamówienia.')
-//         }
-//     } catch {
-//         res.status(400).send('Nie udało sie połączyć')
-//     }finally {
-//         await client.close();
-//     }
-// });
+app.get('/zamowienie', keycloak.protect('realm:admin'), async (req, res) => {
+    const client = new MongoClient(uri)
+    try {
+        await client.connect()
+        console.log('zamow')
+        const database = client.db('Panda')
+        const zamowienia = database.collection('Zamowienia')
+        const result = await zamowienia.find().toArray()
+        res.send(result)
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
+    } finally {
+        await client.close()
+    }
+})
 
+app.put('/zamowienie/increment', keycloak.protect('realm:admin'), async (req, res) => {
+    const client = new MongoClient(uri);
+    const _id = req.body.data._id;
+    try {
+        console.log('zwiekszylem')
+        await client.connect();
+        const database = client.db('Panda');
+        const zamowienia = database.collection('Zamowienia');
+        const query = { _id: new ObjectId(_id) };
+
+        const existingOrder = await zamowienia.findOne(query);
+        if (!existingOrder) {
+            return res.status(404).send('Nie znaleziono zamówienia o podanym _id.');
+        }
+        const updatedType = existingOrder.type + 1;
+        const result = await zamowienia.updateOne(query, { $set: { type: updatedType } });
+        if (result.modifiedCount === 1) {
+            res.send(`Zaktualizowano zamówienie ${_id}, nowy type: ${updatedType}`);
+        } else {
+            res.status(400).send('Nie udało się zaktualizować zamówienia.');
+        }
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji zamówienia:', error);
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.');
+    } finally {
+        await client.close();
+    }
+});
+
+app.get('/zamowienie/moje', keycloak.protect(), async (req, res) => {
+    const client = new MongoClient(uri)
+    const username = req.query.username
+    try {
+        await client.connect()
+        console.log('moje')
+        const database = client.db('Panda')
+        const zamowienia = database.collection('Zamowienia')
+        const result = await zamowienia.find({username: username}).toArray()
+        res.send(result)
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
+    } finally {
+        await client.close()
+    }
+})
 app.listen(PORT,
     () => console.log(`Server running on port ${PORT}`))
 

@@ -10,29 +10,13 @@ import {SignUpContext} from "./Context/LoginProvider";
 import {useKeycloak} from "@react-keycloak/web";
 
 function Nav() {
-    const [cookies, setCookie, removeCookie ] = useCookies(['user'])
-    const { signUpClicked, setSignUpClicked } = useContext(SignUpContext);
-    const logout = async () => {
-        navigate('/')
-        window.location.reload();
-        removeCookie('UserId', cookies.UserId)
-        removeCookie('AuthToken', cookies.AuthToken)
-    }
     const { keycloak, initialized } = useKeycloak();
-
-    const { user } = useUserContext();
-
     const { basket } = useBasketContext();
-
     const navigate = useNavigate()
-
 
     return (
         <>
         <nav>
-            {/*{!user ? <button onClick={() => setSignUpClicked(true)}> ZALOGUJ </button> :*/}
-            {/*        <button onClick={() => navigate('/profile')}>{user.first_name}</button>*/}
-            {/*}*/}
                     {!keycloak.authenticated && (
                         <button
                             type="button"
@@ -42,12 +26,15 @@ function Nav() {
                             Login
                         </button>
                     )}
-
                     {!!keycloak.authenticated && (
                         <button
                             type="button"
                             className="login"
-                            onClick={() => keycloak.logout()}
+                            onClick={() => {
+                                navigate('/')
+                                keycloak.logout()
+                                navigate('/')
+                            }}
                         >
                             Logout ({keycloak.tokenParsed.preferred_username})
                         </button>

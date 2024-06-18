@@ -18,55 +18,70 @@ div.admin-page div.admin-zamowienia{
 
 div.admin-page div.admin-zamowienia .zamowienie {
     margin:2.5em;
-    padding:2.5em;
-    width:13em;
-    height: 33em;
+    padding:1em;
+    width:15em;
+    min-height: 33em;
+    opacity: 0.75;
     border-radius: 1em;
 }
+div.admin-page div.admin-zamowienia .zamowienie:hover {
+    opacity: 1;
+}
+
 div.admin-page div.admin-zamowienia .zamowienie-przychodzace{
     border: 2px solid #1E90FF;
     background: linear-gradient(to bottom, rgba(30, 144, 255, 1), rgba(135, 206, 250, 1));
-    opacity: 0.75;
     transition: opacity 0.5s ease-in-out;
-}
-div.admin-page div.admin-zamowienia .zamowienie-przychodzace:hover  {
-    opacity: 1;
 }
 
 div.admin-page div.admin-zamowienia .zamowienie-przyjete{
     border: 2px solid orangered;
     color: black;
     background: linear-gradient(to bottom, rgba(255, 69, 0, 1), rgba(245, 145, 108, 1));
-    opacity: 0.75;
     transition: opacity 0.5s ease-in-out;
-}
-
-div.admin-page div.admin-zamowienia .zamowienie-przyjete:hover {
-    opacity: 1;
 }
 
 div.admin-page div.admin-zamowienia .zamowienie-wykonane{
     border: 2px solid #9ab7b0;
     background: linear-gradient(to bottom, rgba(64, 224, 208, 1), rgba(175, 238, 238, 1));
-    opacity: 0.75;
     transition: opacity 0.5s ease-in-out;
 }
-div.admin-page div.admin-zamowienia .zamowienie-wykonane:hover{
-    opacity: 1;
-}
+
 
 div.admin-page div.admin-zamowienia .zamowienie-odrzucone{
     border: 2px solid rgb(224, 64, 64);
     background: linear-gradient(to bottom, rgb(218, 35, 35), rgb(208, 101, 101));
-    opacity: 0.75;
+    color: black;
     transition: opacity 0.5s ease-in-out;
-}
-div.admin-page div.admin-zamowienia .zamowienie-odrzucone:hover{
-    opacity: 1;
 }
 
 div.admin-page h2{
     text-transform: uppercase;
     font-size: 2em;
     letter-spacing: 1px;
+}
+
+div.admin-page div.admin-zamowienia .zamowienie .zamowienie-typ{
+    margin:0.5em;
+    display: flex;
+    border: 2px solid white;
+    border-radius: 0.5em;
+    padding:1em;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+div.admin-page div.admin-zamowienia .zamowienie .zamowienie-typ:hover{
+    cursor: pointer;
+}
+
+div.admin-page div.admin-zamowienia .zamowienie .zamowienie-typ .dane{
+    display: flex;
+    flex-direction:column;
+}
+
+div.admin-page div.admin-zamowienia .zamowienie .zamowienie-typ .kupione{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }

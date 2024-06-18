@@ -54,3 +54,86 @@
     padding:1.25em;
     color:black;
 }
+
+
+.basket-historia .zamowienie {
+    margin:2.5em;
+    padding:1em;
+    width:15em;
+    min-height: 33em;
+    opacity: 0.75;
+    border-radius: 1em;
+}
+.basket-historia .zamowienie:hover {
+    opacity: 1;
+}
+
+.basket-historia .zamowienie-przychodzace{
+    border: 2px solid #1E90FF;
+    background: linear-gradient(to bottom, rgba(30, 144, 255, 1), rgba(135, 206, 250, 1));
+    transition: opacity 0.5s ease-in-out;
+}
+
+.basket-historia .zamowienie-przyjete{
+    border: 2px solid orangered;
+    color: black;
+    background: linear-gradient(to bottom, rgba(255, 69, 0, 1), rgba(245, 145, 108, 1));
+    transition: opacity 0.5s ease-in-out;
+}
+
+.basket-historia .zamowienie-wykonane{
+    border: 2px solid #9ab7b0;
+    background: linear-gradient(to bottom, rgba(64, 224, 208, 1), rgba(175, 238, 238, 1));
+    transition: opacity 0.5s ease-in-out;
+}
+
+
+.basket-historia .zamowienie-odrzucone{
+    border: 2px solid rgb(224, 64, 64);
+    background: linear-gradient(to bottom, rgb(218, 35, 35), rgb(208, 101, 101));
+    color: black;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.basket-historia h2{
+    text-transform: uppercase;
+    color: white;
+    font-size: 2em;
+    letter-spacing: 1px;
+}
+
+.basket-historia .zamowienie .zamowienie-typ{
+    margin:0.5em;
+    display: flex;
+    border: 2px solid white;
+    border-radius: 0.5em;
+    padding:1em;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+.basket-historia .zamowienie .zamowienie-typ:hover{
+    cursor: pointer;
+}
+
+.basket-historia .zamowienie .zamowienie-typ .dane{
+    display: flex;
+    flex-direction:column;
+}
+
+.basket-historia .zamowienie .zamowienie-typ .kupione{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.basket-historia {
+    justify-content: center;
+    display: flex;
+}
+
+.basket-page h1{
+    color: white;
+    text-align: center;
+    font-size: 3em;
+}
