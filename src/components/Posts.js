@@ -1,4 +1,5 @@
 import {useNavigate} from "react-router-dom";
+import {useKeycloak} from "@react-keycloak/web";
 
 function Posts() {
     const posty = [
@@ -19,6 +20,10 @@ function Posts() {
         }
     ]
 
+    const { keycloak } = useKeycloak();
+    const isLoggedIn = keycloak.authenticated;
+    const hasRole = keycloak.hasRealmRole("admin")
+
     return (
         <div className="posts">
             {posty.map(post => {
@@ -31,20 +36,20 @@ function Posts() {
                         <div className="post-footer">
                             <i className="fa-regular fa-clock"></i>{post.date}
                         </div>
-                        <div className="post-buttons">
+                        {hasRole && isLoggedIn ? <div className="post-buttons">
                             <button className="edit-post post-button">
                                 <i className="fa-solid fa-pen"></i>
                             </button>
                             <button className="delete-post post-button">
                                 <i className="fa-solid fa-trash-can"></i>
                             </button>
-                        </div>
+                        </div> : null}
                     </div>
                 )
             })}
-            <button className="add-post">
+            {hasRole && isLoggedIn ? <button className="add-post">
                 DODAJ NOWY
-            </button>
+            </button> : null}
             <div className="post-form">
                 <form>
 

@@ -6,6 +6,7 @@ import SushiList from "../components/Menu/SushiList";
 import Extras from "../components/Menu/Extras";
 import axios from "axios";
 import {SignUpContext} from "../components/Context/LoginProvider";
+import {useKeycloak} from "@react-keycloak/web";
 function MenuPage() {
 
     const extras = [
@@ -39,18 +40,34 @@ function MenuPage() {
     const [ state, dispatch ] = useReducer(reducer, initValues)
     const { signUpClicked, setSignUpClicked } = useContext(SignUpContext);
 
-    const getRamen =  async () => {
-        try {
-            const response = await axios.get(`http://localhost:8000/food`, {
-                params: { type: 'ramen' }
-            })
-            await dispatch({type: 'SET_RAMEN_LIST', payload: response.data})
-            console.log(response.data)
-        } catch(err) {
-            console.log(err)
-        }
-    }
+    // const getRamen =  async () => {
+    //     try {
+    //         const response = await axios.get(`http://localhost:8000/food`, {
+    //             params: { type: 'ramen' }
+    //         })
+    //         await dispatch({type: 'SET_RAMEN_LIST', payload: response.data})
+    //         console.log(response.data)
+    //     } catch(err) {
+    //         console.log(err)
+    //     }
+    // }
 
+    const getRamen = async () => {
+        const token = keycloak.token
+        console.log(token)
+        try {
+            const response = await axios.get('http://localhost:8000/food', {
+                params: { type: 'ramen' },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            await dispatch({type: 'SET_RAMEN_LIST', payload: response.data});
+            console.log(response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
     const getSushi =  async () => {
         try {
             const response = await axios.get(`http://localhost:8000/food`, {
@@ -67,6 +84,10 @@ function MenuPage() {
         getSushi()
     }, []);
 
+    const { keycloak } = useKeycloak();
+    const isLoggedIn = keycloak.authenticated;
+    const hasRole = keycloak.hasRealmRole("admin")
+
     return (
         <>
         <Nav setSignUpClicked={setSignUpClicked}/>
@@ -79,7 +100,7 @@ function MenuPage() {
             {state.ramenClicked ? <RamenList ramenList={state.ramenList} dispatch={dispatch}/> : null}
             {state.sushiClicked ? <SushiList sushiLists={state.sushiList} dispatch={dispatch}/> : null }
             { state.extrasClicked ? <Extras extras={extras}/> : null }
-            <button className="choose">Edytuj karte</button>
+            {hasRole && isLoggedIn ? <button className="choose">Edytuj karte</button> : null}
 
         </div>
 

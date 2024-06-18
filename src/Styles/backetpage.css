@@ -43,7 +43,9 @@
 .zamow {
     text-align: center;
 }
-
+.zamow button:hover {
+    cursor: pointer;
+}
 .zamow button {
     border: none;
     background-color: white;

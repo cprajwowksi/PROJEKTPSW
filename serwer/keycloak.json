@@ -1,0 +1,12 @@
+{
+  "realm": "panda-realm",
+  "auth-server-url": "http://localhost:8080/",
+  "ssl-required": "external",
+  "resource": "express-app",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "oQ3sdG7Rc39bBz8XkdAsOlfVqVqFUTya"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}

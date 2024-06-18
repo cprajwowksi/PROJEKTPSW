@@ -4,6 +4,7 @@ import Opinie from '../Opinie';
 import {useCookies} from "react-cookie";
 import axios from "axios";
 import RamenInput from "./RamenInput";
+import {useKeycloak} from "@react-keycloak/web";
 function RamenList({ramenList, dispatch}) {
     const [selected, setSelected ] = useState(null)
     const [ cookie, setCookie, removeCookie ] = useCookies(['user'])
@@ -24,6 +25,10 @@ function RamenList({ramenList, dispatch}) {
     }
 
     const { addBasketContext } = useBasketContext()
+
+    const { keycloak } = useKeycloak();
+    const isLoggedIn = keycloak.authenticated;
+    const hasRole = keycloak.hasRealmRole("admin")
 
     return (
         <div className="ramen-list">
@@ -59,12 +64,13 @@ function RamenList({ramenList, dispatch}) {
                         <div className="przyciski">
                             <button className="dodaj" onClick={() => addBasketContext(ramen)}>Dodaj do zamówienia</button>
                             <button className="opinie" onClick={() => handleOpinie(ramen)}>Opinie</button>
-                            { cookie.UserId === "8d0c54a6-e85d-4426-82a2-21afcedc1e9f" ? <button onClick={() => deleteFood(ramen)}><i className="fa-solid fa-x" ></i></button> : null}
+                            { hasRole && isLoggedIn ? <button onClick={() => deleteFood(ramen)}><i className="fa-solid fa-x" ></i></button> : null}
                         </div>
                     </div>
                 )
             })}
-            <RamenInput selected={selected} dispatch={dispatch} ramenList={ramenList}/>
+
+            {hasRole && isLoggedIn ? <RamenInput selected={selected} dispatch={dispatch} ramenList={ramenList}/> : null}
         </div>
     );
 }

@@ -12,7 +12,9 @@ import BasketPage from "./pages/BasketPage";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./keycloak/Keycloak.js"
 import {useEffect} from "react";
-
+import PrivateRoute from "./keycloak/PrivateRoute";
+import UserRoute from "./keycloak/UserRoute";
+import AdminPage from "./pages/AdminPage";
 function App() {
     const [cookie, setCookie, removeCookie] = useCookies(['user']);
     const userId = cookie.UserId
@@ -27,10 +29,19 @@ function App() {
                             <Routes>
                                 <Route path="/" element={<Home/>}/>
                                 <Route path="/onboarding" element={<Onboarding/>}/>
-                                { userId && <Route path="/profile" element={<Profile/>}/>}
-                                { userId && <Route path="/basket" element={<BasketPage/>}/>}
+                                {/*{ userId && <Route path="/profile" element={<Profile/>}/>}*/}
+                                <Route path="/basket" element={
+                                    <UserRoute>
+                                        <BasketPage/>
+                                    </UserRoute>
+                                }/>
                                 <Route path="/menu" element={<MenuPage/>}/>
                                 <Route path="/info" element={<Information/>}/>
+                                <Route path="/admin"  element={
+                                    <PrivateRoute>
+                                        <AdminPage />
+                                    </PrivateRoute>
+                                } />
                             </Routes>
                         </BasketProvider>
                     </UserProvider>

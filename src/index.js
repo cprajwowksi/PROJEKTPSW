@@ -12,6 +12,7 @@ import './Styles/posts.css'
 import './Styles/backetpage.css'
 import './Styles/opinie.css'
 import './Styles/Chat.css'
+import './Styles/adminpage.css'
 import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

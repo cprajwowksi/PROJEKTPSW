@@ -2,7 +2,6 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {useCookies} from "react-cookie";
 import {useUserContext} from "./UserProvider";
-
 function Opinie({food, setClicked}) {
     const [opinie, setOpinie] = useState(null)
     const [opinia, setOpinia] = useState("")
@@ -117,6 +116,7 @@ function Opinie({food, setClicked}) {
             console.log(err)
         }
     }
+
 
     return (
         opinie ? (

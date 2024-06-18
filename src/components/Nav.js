@@ -33,7 +33,6 @@ function Nav() {
             {/*{!user ? <button onClick={() => setSignUpClicked(true)}> ZALOGUJ </button> :*/}
             {/*        <button onClick={() => navigate('/profile')}>{user.first_name}</button>*/}
             {/*}*/}
-
                     {!keycloak.authenticated && (
                         <button
                             type="button"
@@ -53,19 +52,18 @@ function Nav() {
                             Logout ({keycloak.tokenParsed.preferred_username})
                         </button>
                     )}
-
-            {user && <button onClick={() => navigate('/menu')}>MENU</button>}
+            {/*{keycloak.authenticated && <button onClick={() => navigate('/menu')}>MENU</button>}*/}
             <a href="https://www.facebook.com/profile.php?id=100086246228234"><i className="fa-brands fa-square-facebook"></i></a>
             <a href="https://www.instagram.com/panda_slupsk/"><i className="fa-brands fa-instagram"></i></a>
             <div className="logo-container" onClick={() => navigate('/')}>
                 <img className="panda-logo" src={logo} alt="panda-logo"/>
             </div>
             <i className="fa-solid fa-phone"></i>
-            <div className="basket-icon" onClick={() => user? navigate('/basket') : navigate('/')}><i className="fa-solid fa-basket-shopping"></i>{ basket.length != 0 ? <p>{basket.length}</p> : null }</div>
+            <div className="basket-icon" onClick={() => keycloak.authenticated ? navigate('/basket') : navigate('/')}><i className="fa-solid fa-basket-shopping"></i>{ basket.length != 0 ? <p>{basket.length}</p> : null }</div>
             <button onClick={() => navigate('/info')}>INFO</button>
-            { user ? <button onClick={logout}>WYLOGUJ</button>  : null}
+            {/*{ user ? <button onClick={logout}>WYLOGUJ</button>  : null}*/}
         </nav>
-            { signUpClicked ? <AuthModal setSignUpClicked={setSignUpClicked}/> : null}
+            {/*{ signUpClicked ? <AuthModal setSignUpClicked={setSignUpClicked}/> : null}*/}
         </>
     );
 }
