@@ -56,6 +56,7 @@ function BasketPage() {
                 }
             );
             setBasketContext([]);
+            window.reload()
         } catch (err) {
             setBasketContext([]);
             console.log(err);

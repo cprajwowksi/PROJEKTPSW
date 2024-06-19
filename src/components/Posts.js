@@ -1,60 +1,115 @@
 import {useNavigate} from "react-router-dom";
 import {useKeycloak} from "@react-keycloak/web";
+import keycloak from "../keycloak/Keycloak";
+import axios from "axios";
+import {use} from "bcrypt/promises";
+import {useEffect, useState} from "react";
 
 function Posts() {
-    const posty = [
-        {
-            user: {
-            id: 1, name: "Patryk", role:'Wlasciciel', img: 'pandaimg'
-            },
-        date: '12:12:2023',
-        message:'Dziękuje za rok 2023!!'
-        }
-        ,
-        {
-            user: {
-                id: 1, name: "Patryk", role:'Wlasciciel', img: 'pandaimg'
-            },
-            date: '12:11:2023',
-            message:'W naszym menu posiadamy autorskie rameny – shoyu ramen, tantanmen ramen, curry paitan ramen. Co miesiąc tworzymy inny, specjalny ramen o unikatowym smaku o którym informujemy na naszych mediach społecznościowych. Buliony są naszą autorska kompozycją, a dodatki do nich to najlepszej jakości składniki.!!'
-        }
-    ]
+    const [text, setText] = useState()
+    const [posty, setPosty] = useState([])
+    const handleInputChange = (event) => {
+        setText(event.target.value);
+    };
+    const postPost = async () => {
+        const token = keycloak.token;
+        try {
+            await axios.post(
+                `http://localhost:8000/post`,
+                {
+                    data: { message: text, username: keycloak.tokenParsed?.preferred_username, date: new Date().toISOString()},
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    withCredentials: false,
+                }
+            );
+            setPosty([...posty,  {message: text, username: keycloak.tokenParsed?.preferred_username, date: new Date().toISOString()}])
 
+        } catch (err) {
+            console.log(err);
+        }
+
+    };
+    const getPosty = async () => {
+        const token = keycloak.token
+        try {
+            const response = await axios.get('http://localhost:8000/post', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setPosty(response.data)
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const deletePost = async (id) => {
+        const token = keycloak.token;
+        setPosty(posty.filter(x => x._id !== id))
+        try {
+            await axios.delete(
+                `http://localhost:8000/post`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    data: { _id: id },
+                    withCredentials: false,
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        getPosty()
+    }, []);
     const { keycloak } = useKeycloak();
     const isLoggedIn = keycloak.authenticated;
     const hasRole = keycloak.hasRealmRole("admin")
 
     return (
         <div className="posts">
-            {posty.map(post => {
+            {posty.sort((a,b) => b.date.split('T')[0] - a.date.split('T')[0]).map(post => {
                 return (
                     <div className="post">
-                        <h2>{post.user.name} ({post.user.role})</h2>
+                        <h2>{post.username}</h2>
                         <div className="post-body">
                             {post.message}
                         </div>
                         <div className="post-footer">
-                            <i className="fa-regular fa-clock"></i>{post.date}
+                            <i className="fa-regular fa-clock"></i>{`${post.date.split('T')[0]}`}
                         </div>
                         {hasRole && isLoggedIn ? <div className="post-buttons">
                             <button className="edit-post post-button">
                                 <i className="fa-solid fa-pen"></i>
                             </button>
                             <button className="delete-post post-button">
-                                <i className="fa-solid fa-trash-can"></i>
+                                <i className="fa-solid fa-trash-can" onClick={() => deletePost(post._id)}></i>
                             </button>
                         </div> : null}
                     </div>
                 )
             })}
-            {hasRole && isLoggedIn ? <button className="add-post">
+            {hasRole && isLoggedIn ?<div className="add-post">
+                <form>
+                    <input
+                        type="text"
+                        value={text}
+                        onChange={handleInputChange}
+                        placeholder="..."
+                    />
+                </form>
+            </div> : null}
+            {hasRole && isLoggedIn ? <button className="add-post" onClick={() => text.length > 0 ? postPost() : null}>
                 DODAJ NOWY
             </button> : null}
-            <div className="post-form">
-                <form>
 
-                </form>
-            </div>
         </div>
     );
 }

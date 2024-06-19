@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 import axios from "axios";
 import { useFormik } from 'formik';
+import keycloak from "../../keycloak/Keycloak";
 function RamenInput({selected, dispatch, ramenList}) {
 
     const initialValues = {
@@ -23,14 +24,18 @@ function RamenInput({selected, dispatch, ramenList}) {
             onSubmit: async (values) => {
                 const ingredientsArray = values.ingredients.split(',').map((ingredient) => ingredient.trim());
                 const formattedValues = {...values, opinie:[],spicy:0,type:"ramen",ingredients: ingredientsArray, vege:false, bestseller:false }
-
-
                 try {
                     console.log('ale klika sie')
+                    const token = keycloak.token
                     dispatch({type:'SET_RAMEN_LIST', payload: [...ramenList, formattedValues]})
                     const response = await axios.post('http://localhost:8000/food', {
-                        data: { formattedValues }
-                    })
+                        data: {formattedValues},
+                    }, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        withCredentials: false,
+                    });
                     console.log(values)
                 } catch (err) {
                     console.log(err)

@@ -16,6 +16,7 @@
 
 .posts .post h2{
     font-size: 2em;
+
 }
 
 .posts .post div{
@@ -68,4 +69,21 @@ button.add-post:hover{
     background-color: white;
     cursor:pointer;
     color: black;
+}
+
+div.add-post input{
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    border-radius: 1em;
+    padding:0.5em;
+    font-size: 1.5em;
+    margin:0.5em;
+    text-align: center;
+}
+
+div.add-post input::placeholder {
+    color: white;
+    font-size: 1.5em;
+    opacity: 0.7; /* Adjust the opacity for placeholder text */
 }

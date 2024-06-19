@@ -15,15 +15,40 @@ function RamenList({ramenList, dispatch}) {
     }
 
     const deleteFood = async (food) => {
+        const token= keycloak.token
+
         try {
-            const response = await axios.delete('http://localhost:8000/food', { data: food})
+            await axios.delete('http://localhost:8000/food',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                data: { food: food },
+            withCredentials: false
+        }
+        )
             dispatch({type: 'SET_RAMEN_LIST', payload: ramenList.filter(x => x !== food)})
-
         } catch {
-
         }
     }
 
+    const deletePost = async (id) => {
+        const token = keycloak.token;
+        try {
+            await axios.delete(
+                `http://localhost:8000/post`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    data: { _id: id },
+                    withCredentials: false,
+                }
+            );
+        } catch (err) {
+            console.log(err);
+        }
+    };
     const { addBasketContext } = useBasketContext()
 
     const { keycloak } = useKeycloak();

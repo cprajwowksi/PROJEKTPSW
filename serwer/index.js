@@ -218,13 +218,15 @@ app.get('/food', async (req, res) => {
 
 app.delete('/food', keycloak.protect('realm:admin'), async (req, res) => {
     const client = new MongoClient(uri)
-    const foodId = req.body._id
+    const foodId = req.body.food._id
+
     try{
         await client.connect()
         const database = client.db('Panda')
         const foods = database.collection('food')
         const query = { _id: new ObjectId(foodId)}
         const result = await foods.deleteOne(query)
+        console.log(result.deletedCount)
         if (result.deletedCount === 1) {
             res.status(200).send('Potrawa została pomyślnie usunięta');
         } else {
@@ -327,6 +329,71 @@ app.get('/zamowienie/moje', keycloak.protect(), async (req, res) => {
         const database = client.db('Panda')
         const zamowienia = database.collection('Zamowienia')
         const result = await zamowienia.find({username: username}).toArray()
+        res.send(result)
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
+    } finally {
+        await client.close()
+    }
+})
+
+app.post('/post', keycloak.protect('realm:admin'), async (req, res) => {
+    const client = new MongoClient(uri)
+    const post = req.body.data
+    console.log(post)
+    try {
+        await client.connect()
+        const database = client.db('Panda')
+        const posty = database.collection('Posty')
+        const result = await posty.insertOne(post)
+        if (result.acknowledged && result.insertedId) {
+            res.status(201).send('Zamówienie zostało pomyślnie dodane.');
+        } else {
+            res.status(400).send('Nie udało się dodać zamówienia.');
+        }
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
+    } finally {
+        await client.close()
+    }
+})
+
+
+app.delete('/post', keycloak.protect('realm:admin'), async (req, res) => {
+    const client = new MongoClient(uri)
+    console.log(req)
+    const post = req.body._id
+    try {
+        console.log('usuw')
+        await client.connect()
+        const database = client.db('Panda')
+        const posty = database.collection('Posty')
+        const query = { _id: new ObjectId(post) };
+
+        const result = await posty.deleteOne(query)
+        console.log(result.deletedCount)
+        if (result.deletedCount === 1) {
+            res.status(203).send('Zamówienie zostało pomyślnie usunięte.');
+        } else {
+            res.status(400).send('Nie udało się dodać zamówienia.');
+        }
+    } catch (error) {
+        console.error('Error during insertion:', error)
+        res.status(400).send('Wystąpił problem podczas przetwarzania zamówienia.')
+    } finally {
+        await client.close()
+    }
+})
+
+app.get('/post', async (req, res) => {
+    const client = new MongoClient(uri)
+    try {
+        await client.connect()
+        const database = client.db('Panda')
+        const posty = database.collection('Posty')
+        const result = await posty.find({}).toArray()
         res.send(result)
     } catch (error) {
         console.error('Error during insertion:', error)
