@@ -16,6 +16,8 @@ services:
       - ./keycloak-conf:/opt/keycloak/data/import
     depends_on:
       - keycloak-postgres
+    networks:
+      - mynetwork
 
   keycloak-postgres:
     image: postgres:latest
@@ -27,6 +29,21 @@ services:
       - 5432:5432
     volumes:
       - postgres_data_new_kubernetes:/var/lib/postgresql/data
+    
+    networks:
+      - mynetwork
+
+  mybackend:
+    image: cprajwowski/backend
+    ports:
+      - 8000:8000
+      - 8001:8001
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data_new_kubernetes:
+
+networks:
+  mynetwork:
+    driver: bridge

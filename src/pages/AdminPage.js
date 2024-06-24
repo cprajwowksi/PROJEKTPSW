@@ -3,13 +3,12 @@ import axios from "axios";
 import {useKeycloak} from "@react-keycloak/web";
 import {useEffect, useState} from "react";
 import Zamowienie from "../components/Basket/Zamowienie";
-import zamowienie from "../components/Basket/Zamowienie";
+
 function AdminPage (){
     const [zamowienia, setZamowienia] = useState([])
     const { keycloak } = useKeycloak();
     const getZamowienia = async () => {
         const token = keycloak.token
-
         try {
             const response = await axios.get('http://localhost:8000/zamowienie', {
                 headers: {
@@ -21,7 +20,6 @@ function AdminPage (){
             console.log(err);
         }
     };
-
     useEffect(() => {
         getZamowienia()
     }, []);

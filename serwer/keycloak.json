@@ -1,6 +1,6 @@
 {
   "realm": "panda-realm",
-  "auth-server-url": "http://localhost:8080/",
+  "auth-server-url": "http://host.docker.internal:8080",
   "ssl-required": "external",
   "resource": "express-app",
   "verify-token-audience": true,

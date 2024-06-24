@@ -69,15 +69,16 @@ function MenuPage() {
             console.log(err)
         }
     }
+    const { keycloak } = useKeycloak();
+    const isLoggedIn = keycloak.authenticated;
+    const hasRole = keycloak.hasRealmRole("admin")
 
     useEffect(() => {
         getRamen()
         getSushi()
-    }, []);
+    }, [keycloak.token]);
 
-    const { keycloak } = useKeycloak();
-    const isLoggedIn = keycloak.authenticated;
-    const hasRole = keycloak.hasRealmRole("admin")
+
 
     return (
         <>

@@ -1,15 +1,13 @@
 const PORT = 8000
 
+const axios = require('axios')
 const express = require('express')
 const { MongoClient, ObjectId  } = require('mongodb')
 const cors = require('cors')
 const app = express()
 let session = require('express-session');
-let { NodeAdapter} = require("ef-keycloak-connect");
-const config = require(`./keycloak.json`);
-const keycloak = new NodeAdapter(config)
 
-app.use(cors())
+app.use(cors());
 
 app.use(session({
     secret: 'secret1',
@@ -17,75 +15,56 @@ app.use(session({
     saveUninitialized: true,
 }));
 
-app.use( keycloak.middleware({ logout: '/logout' }))
+const keycloakBaseUrl = 'http://keycloak:8080'
+const realmName = 'panda-realm'
+const clientSecret = "oQ3sdG7Rc39bBz8XkdAsOlfVqVqFUTya"
+const clientId = "express-app"
+
+function protect(role = null) {
+    return async (req, res, next) => {
+      const jwtToken = req.headers.authorization.split(" ")[1];
+  
+      try {
+        const introspectUrl = `${keycloakBaseUrl}/realms/${realmName}/protocol/openid-connect/token/introspect`;
+  
+        const params = new URLSearchParams();
+        params.append("token", jwtToken);
+        params.append("client_id", clientId);
+        params.append("client_secret", clientSecret);
+  
+        const response = await axios.post(introspectUrl, params, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+  
+        if (response.data.active) {
+          const roles = response.data.realm_access.roles;
+          if (role === null) {
+            next();
+          } else if (roles.includes(role)) {
+            next();
+          } else {
+            return res.status(403).json({ error: "Brak uprawnień" });
+          }
+        } else {
+          return res.status(401).json({ error: "Nieprawidłowy token JWT" });
+        }
+      } catch (error) {
+        console.error("Błąd podczas introspekcji tokena:", error);
+        return res
+          .status(500)
+          .json({ error: "Błąd serwera podczas weryfikacji tokena" });
+      }
+    };
+  }
 app.use(express.json());
-app.get('/hello', keycloak.protect(), (req, res) => {
+app.get('/hello', protect(), (req, res) => {
     console.log('Home accessed..');
     res.send('Hello World');
 });
 
 const uri = 'mongodb+srv://smaczniutkietosty:mypassword@cluster0.oxudjvz.mongodb.net/?retryWrites=true&w=majority'
-
-// app.post('/signup', async (req, res) => {
-//
-//     const client = new MongoClient(uri)
-//     const { email, password } = req.body
-//     const generatedUserId = uuidv4()
-//     const hashedpassword = await bcrypt.hash(password, 10)
-//
-//     try {
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const existingUser = await users.findOne({email})
-//         if (existingUser){
-//             return res.status(409).send('User already exists. Please login')
-//         }
-//
-//         const sanitizedEmail = email.toLowerCase()
-//
-//         const data = {
-//             user_id:generatedUserId,
-//             email:sanitizedEmail,
-//             hashed_password:hashedpassword
-//         }
-//         const insertedUser = await users.insertOne(data)
-//
-//         const token = jwt.sign(insertedUser, sanitizedEmail, {
-//             expiresIn: 60 * 24,
-//         })
-//         res.status(201).json({token, userId: generatedUserId, email: sanitizedEmail})
-//     } catch (err) {
-//         console.log(err)
-//     }
-// })
-//
-// app.post('/login', async (req, res) => {
-//     const client = new MongoClient(uri)
-//     const { email, password } = req.body
-//     try {
-//         await client.connect()
-//         const database = client.db('Panda')
-//         const users = database.collection('users')
-//         const user = await users.findOne({email})
-//         if (!user) {
-//             res.status(404).send('Podano zly email lub haslo')
-//             return
-//         }
-//         const correctPassword = await bcrypt.compare(password, user.hashed_password)
-//         if (user && correctPassword) {
-//             const token = jwt.sign(
-//                 user,
-//                 email,
-//                 {expiresIn: 60 * 24})
-//             return res.status(201).json({token, userId: user.user_id, email})
-//         }
-//         return res.status(404).send('Podano zly email lub haslo')
-//
-//     } catch (err) {
-//         console.log(err)
-//     }
-// })
 
 app.get('/users', async (req, res) => {
     const client = new MongoClient(uri)
@@ -103,7 +82,7 @@ app.get('/users', async (req, res) => {
     }
 })
 
-app.get('/opinie', async (req, res) => {
+app.get('/opinie', protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const foodId = req.query.foodId
     if (foodId !== undefined){
@@ -122,7 +101,7 @@ app.get('/opinie', async (req, res) => {
     }
 })
 
-app.post('/opinia', keycloak.protect(), async (req, res) => {
+app.post('/opinia', protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const formattedOpinia = req.body.params.formattedOpinia
     if (formattedOpinia !== undefined){
@@ -169,7 +148,7 @@ app.delete('/opinia', async (req, res) => {
     }
 })
 
-app.put('/opinia', keycloak.protect(), async (req, res) => {
+app.put('/opinia', protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const formattedOpinia = req.body.data.formattedOpinia
     const drugaOpinia = req.body.data.drugaOpinia
@@ -216,7 +195,7 @@ app.get('/food', async (req, res) => {
     }
 })
 
-app.delete('/food', keycloak.protect('realm:admin'), async (req, res) => {
+app.delete('/food', protect("admin"), async (req, res) => {
     const client = new MongoClient(uri)
     const foodId = req.body.food._id
 
@@ -238,7 +217,7 @@ app.delete('/food', keycloak.protect('realm:admin'), async (req, res) => {
         await client.close()
     }
 })
-app.post('/food', keycloak.protect('realm:admin'), async(req ,res) => {
+app.post('/food', protect("admin"), async(req ,res) => {
     const client = new MongoClient(uri)
     const food = req.body.data.formattedValues
     try {
@@ -252,7 +231,7 @@ app.post('/food', keycloak.protect('realm:admin'), async(req ,res) => {
     }
 })
 
-app.post('/zamowienie', keycloak.protect(), async (req, res) => {
+app.post('/zamowienie', protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const zamowienie = req.body.data
     zamowienie.type = 0
@@ -274,7 +253,7 @@ app.post('/zamowienie', keycloak.protect(), async (req, res) => {
     }
 })
 
-app.get('/zamowienie', keycloak.protect('realm:admin'), async (req, res) => {
+app.get('/zamowienie', protect("admin"), async (req, res) => {
     const client = new MongoClient(uri)
     try {
         await client.connect()
@@ -291,7 +270,7 @@ app.get('/zamowienie', keycloak.protect('realm:admin'), async (req, res) => {
     }
 })
 
-app.put('/zamowienie/increment', keycloak.protect('realm:admin'), async (req, res) => {
+app.put('/zamowienie/increment', protect("admin"), async (req, res) => {
     const client = new MongoClient(uri);
     const _id = req.body.data._id;
     try {
@@ -320,7 +299,7 @@ app.put('/zamowienie/increment', keycloak.protect('realm:admin'), async (req, re
     }
 });
 
-app.get('/zamowienie/moje', keycloak.protect(), async (req, res) => {
+app.get('/zamowienie/moje', protect(), async (req, res) => {
     const client = new MongoClient(uri)
     const username = req.query.username
     try {
@@ -338,7 +317,7 @@ app.get('/zamowienie/moje', keycloak.protect(), async (req, res) => {
     }
 })
 
-app.post('/post', keycloak.protect('realm:admin'), async (req, res) => {
+app.post('/post', protect("admin"), async (req, res) => {
     const client = new MongoClient(uri)
     const post = req.body.data
     console.log(post)
@@ -361,7 +340,7 @@ app.post('/post', keycloak.protect('realm:admin'), async (req, res) => {
 })
 
 
-app.delete('/post', keycloak.protect('realm:admin'), async (req, res) => {
+app.delete('/post', protect("admin"), async (req, res) => {
     const client = new MongoClient(uri)
     console.log(req)
     const post = req.body._id

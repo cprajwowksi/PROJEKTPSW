@@ -1,8 +1,5 @@
-import {useNavigate} from "react-router-dom";
 import {useKeycloak} from "@react-keycloak/web";
-import keycloak from "../keycloak/Keycloak";
 import axios from "axios";
-import {use} from "bcrypt/promises";
 import {useEffect, useState} from "react";
 
 function Posts() {
@@ -34,7 +31,7 @@ function Posts() {
 
     };
     const getPosty = async () => {
-        const token = keycloak.token
+        const token = keycloak.token ? keycloak.token : "1"
         try {
             const response = await axios.get('http://localhost:8000/post', {
                 headers: {
@@ -69,6 +66,7 @@ function Posts() {
     useEffect(() => {
         getPosty()
     }, []);
+
     const { keycloak } = useKeycloak();
     const isLoggedIn = keycloak.authenticated;
     const hasRole = keycloak.hasRealmRole("admin")
@@ -96,7 +94,7 @@ function Posts() {
                     </div>
                 )
             })}
-            {hasRole && isLoggedIn ?<div className="add-post">
+             {hasRole && isLoggedIn ?<div className="add-post">
                 <form>
                     <input
                         type="text"
@@ -109,7 +107,6 @@ function Posts() {
             {hasRole && isLoggedIn ? <button className="add-post" onClick={() => text.length > 0 ? postPost() : null}>
                 DODAJ NOWY
             </button> : null}
-
         </div>
     );
 }
