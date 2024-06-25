@@ -28,7 +28,7 @@ function RamenInput({selected, dispatch, ramenList}) {
                     console.log('ale klika sie')
                     const token = keycloak.token
                     dispatch({type:'SET_RAMEN_LIST', payload: [...ramenList, formattedValues]})
-                    const response = await axios.post('http://localhost:8001/food', {
+                    const response = await axios.post('/food', {
                         data: {formattedValues},
                     }, {
                         headers: {

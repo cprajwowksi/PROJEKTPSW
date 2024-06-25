@@ -42,7 +42,7 @@ function MenuPage() {
         const token = keycloak.token
         console.log(token)
         try {
-            const response = await axios.get('http://localhost:8000/food', {
+            const response = await axios.get('/food', {
                 params: { type: 'ramen'},
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -54,10 +54,11 @@ function MenuPage() {
             console.log(err);
         }
     };
+
     const getSushi =  async () => {
         const token = keycloak.token
         try {
-            const response = await axios.get('http://localhost:8000/food', {
+            const response = await axios.get('/food', {
                 params: { type: 'sushi' },
                 headers: {
                     'Authorization': `Bearer ${token}`

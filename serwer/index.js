@@ -15,6 +15,7 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+  
 const keycloakBaseUrl = 'http://keycloak:8080'
 const realmName = 'panda-realm'
 const clientSecret = "oQ3sdG7Rc39bBz8XkdAsOlfVqVqFUTya"
@@ -64,7 +65,11 @@ app.get('/hello', protect(), (req, res) => {
     res.send('Hello World');
 });
 
-const uri = 'mongodb+srv://smaczniutkietosty:mypassword@cluster0.oxudjvz.mongodb.net/?retryWrites=true&w=majority'
+const username = 'root';
+const password = 'pass1234';
+const host = 'mymongo'
+
+const uri = `mongodb://${username}:${password}@${host}:27017/Panda?authSource=admin`;
 
 app.get('/users', async (req, res) => {
     const client = new MongoClient(uri)

@@ -22,7 +22,7 @@ function ChatHTTPS() {
     const deleteMessage = async (message) => {
 
         try {
-            await axios.delete(`http://localhost:8000/message`, {
+            await axios.delete(`/message`, {
                 data: { message }
             })
         } catch(err) {
@@ -33,7 +33,7 @@ function ChatHTTPS() {
     const editMessage = async (message) => {
         const edited = { ...message, message: edit}
         try {
-            await axios.put(`http://localhost:8000/message`, {
+            await axios.put(`/message`, {
                 data: { message: message, edited: edited }
             })
         } catch(err) {
@@ -48,7 +48,7 @@ function ChatHTTPS() {
             to_id: (cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ?  selectedUser : '8d0c54a6-e85d-4426-82a2-21afcedc1e9f')
         }
         try {
-            const response = await axios.post(`http://localhost:8000/messages`, {
+            const response = await axios.post(`/messages`, {
                 data: { message: formattedMessage }
             })
 
@@ -63,7 +63,7 @@ function ChatHTTPS() {
     const getMyMessages =  async () => {
 
         try {
-            const response = await axios.get(`http://localhost:8000/messages`, {
+            const response = await axios.get(`/messages`, {
                 params: { userId: (cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ?  selectedUser : cookies.UserId), toId: '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' }
             })
             setMessages(response.data)
@@ -75,7 +75,7 @@ function ChatHTTPS() {
     const getAdminMessages =  async () => {
 
         try {
-            const response = await axios.get(`http://localhost:8000/messages`, {
+            const response = await axios.get(`/messages`, {
                 params: { userId: '8d0c54a6-e85d-4426-82a2-21afcedc1e9f', toId: (cookies.UserId === '8d0c54a6-e85d-4426-82a2-21afcedc1e9f' ?  selectedUser : cookies.UserId) }
             })
             setAdminMessages(response.data)
@@ -85,7 +85,7 @@ function ChatHTTPS() {
     }
     const getUsers =  async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/users`)
+            const response = await axios.get(`/users`)
             setUsers(response.data)
         } catch(err) {
             console.log(err)

@@ -12,7 +12,7 @@ function Opinie({food, setClicked}) {
 
     const getOpinie =  async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/opinie`, {
+            const response = await axios.get(`/opinie`, {
                 params: { foodId: food._id }
             })
             await setOpinie(response.data)

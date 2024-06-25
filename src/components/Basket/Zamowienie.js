@@ -7,7 +7,7 @@ const Zamowienie = ({ id, username, cena, basket, zamowienia, setZamowienia }) =
         const token = keycloak.token;
         try {
             await axios.put(
-                `http://localhost:8000/zamowienie/increment`,
+                `/zamowienie/increment`,
                 {
                     data: { _id: id },
                 },

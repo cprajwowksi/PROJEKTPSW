@@ -43,7 +43,7 @@ const Onboarding = () => {
             console.log('submitted')
             console.log(values)
             try{
-                const response = await axios.put('http://localhost:8000/user', { values })
+                const response = await axios.put('/user', { values })
                 const success = response.status === 200
                 if (success) navigate('/')
             } catch (err) {

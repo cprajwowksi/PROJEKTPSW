@@ -12,7 +12,7 @@ function Posts() {
         const token = keycloak.token;
         try {
             await axios.post(
-                `http://localhost:8000/post`,
+                `/post`,
                 {
                     data: { message: text, username: keycloak.tokenParsed?.preferred_username, date: new Date().toISOString()},
                 },
@@ -33,7 +33,7 @@ function Posts() {
     const getPosty = async () => {
         const token = keycloak.token ? keycloak.token : "1"
         try {
-            const response = await axios.get('http://localhost:8000/post', {
+            const response = await axios.get('/post', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -49,7 +49,7 @@ function Posts() {
         setPosty(posty.filter(x => x._id !== id))
         try {
             await axios.delete(
-                `http://localhost:8000/post`,
+                `/post`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,

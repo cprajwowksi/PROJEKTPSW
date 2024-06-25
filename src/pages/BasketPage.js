@@ -28,7 +28,7 @@ function BasketPage() {
     const getZamowienie = async () => {
         const token = keycloak.token
         try {
-            const response = await axios.get('http://localhost:8000/zamowienie/moje', {
+            const response = await axios.get('/zamowienie/moje', {
                 params: { username: keycloak.tokenParsed.preferred_username },
                 headers: {
                     'Authorization': `Bearer ${token}`

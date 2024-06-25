@@ -74,7 +74,7 @@ const Profile = () => {
             console.log(values)
             window.location.reload()
             try{
-                const response = await axios.patch('http://localhost:8000/user', { values })
+                const response = await axios.patch('/user', { values })
                 const success = response.status === 200
             } catch (err) {
                 console.log(err)

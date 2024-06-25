@@ -10,7 +10,7 @@ function AdminPage (){
     const getZamowienia = async () => {
         const token = keycloak.token
         try {
-            const response = await axios.get('http://localhost:8000/zamowienie', {
+            const response = await axios.get('/zamowienie', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
