@@ -16,7 +16,8 @@ app.use(session({
 }));
 
   
-const keycloakBaseUrl = 'http://keycloak:8080'
+const keycloakBaseUrl = process.env.KEYCLOAK_HOST_URL || 'http://keycloak:8080';
+
 const realmName = 'panda-realm'
 const clientSecret = "oQ3sdG7Rc39bBz8XkdAsOlfVqVqFUTya"
 const clientId = "express-app"
@@ -24,21 +25,22 @@ const clientId = "express-app"
 function protect(role = null) {
     return async (req, res, next) => {
       const jwtToken = req.headers.authorization.split(" ")[1];
-  
+      console.log(jwtToken)
       try {
         const introspectUrl = `${keycloakBaseUrl}/realms/${realmName}/protocol/openid-connect/token/introspect`;
-  
+        console.log(introspectUrl)
         const params = new URLSearchParams();
         params.append("token", jwtToken);
         params.append("client_id", clientId);
         params.append("client_secret", clientSecret);
-  
+        
         const response = await axios.post(introspectUrl, params, {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
         });
-  
+        console.log(response)
+        
         if (response.data.active) {
           const roles = response.data.realm_access.roles;
           if (role === null) {
@@ -67,7 +69,9 @@ app.get('/hello', protect(), (req, res) => {
 
 const username = 'root';
 const password = 'pass1234';
-const host = 'mymongo'
+
+const host = process.env.DB_HOST_URL || 'mymongo';
+
 
 const uri = `mongodb://${username}:${password}@${host}:27017/Panda?authSource=admin`;
 

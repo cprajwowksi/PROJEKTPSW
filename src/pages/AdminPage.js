@@ -7,6 +7,7 @@ import Zamowienie from "../components/Basket/Zamowienie";
 function AdminPage (){
     const [zamowienia, setZamowienia] = useState([])
     const { keycloak } = useKeycloak();
+    
     const getZamowienia = async () => {
         const token = keycloak.token
         try {
@@ -20,6 +21,7 @@ function AdminPage (){
             console.log(err);
         }
     };
+
     useEffect(() => {
         getZamowienia()
     }, []);
